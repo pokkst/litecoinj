@@ -1,13 +1,10 @@
-[![Github Build Status](https://github.com/bitcoinj/bitcoinj/workflows/Java%20CI/badge.svg)](https://github.com/bitcoinj/bitcoinj/actions)
-[![Travis Build Status](https://travis-ci.org/bitcoinj/bitcoinj.png?branch=master)](https://travis-ci.org/bitcoinj/bitcoinj)
-[![GitLab Build Status](https://gitlab.com/bitcoinj/bitcoinj/badges/master/pipeline.svg)](https://gitlab.com/bitcoinj/bitcoinj/pipelines)
-[![Coverage Status](https://coveralls.io/repos/bitcoinj/bitcoinj/badge.png?branch=master)](https://coveralls.io/r/bitcoinj/bitcoinj?branch=master)
+This Java library for Litecoin is a fork of bitcoinj. It has support for Segwit, and the WalletAppKit functions correctly, so SPV also works.
 
-[![Visit our IRC channel](https://kiwiirc.com/buttons/irc.freenode.net/bitcoinj.png)](https://kiwiirc.com/client/irc.freenode.net/bitcoinj)
+Please consider donating here: ltc1qvd3x5y4rdyvyckg6rks3znpsrz0xjqv3wap0nt
 
-### Welcome to bitcoinj
+### Welcome to litecoinj
 
-The bitcoinj library is a Java implementation of the Bitcoin protocol, which allows it to maintain a wallet and send/receive transactions without needing a local copy of Bitcoin Core. It comes with full documentation and some example apps showing how to use it.
+The litecoinj library is a Java implementation of the Bitcoin protocol, which allows it to maintain a wallet and send/receive transactions without needing a local copy of Bitcoin Core. It comes with full documentation and some example apps showing how to use it.
 
 ### Technologies
 
@@ -42,11 +39,11 @@ Alternatively, just import the project using your IDE. [IntelliJ](http://www.jet
 
 ### Building and Using the Wallet Tool
 
-The **bitcoinj** `tools` subproject includes a command-line Wallet Tool (`wallet-tool`) that can be used to create and manage **bitcoinj**-based wallets (both the HD keychain and SPV blockchain state.) Using `wallet-tool` on Bitcoin's test net is a great way to learn about Bitcoin and **bitcoinj**.
+The **litecoinj** `tools` subproject includes a command-line Wallet Tool (`wallet-tool`) that can be used to create and manage **litecoinj**-based wallets (both the HD keychain and SPV blockchain state.) Using `wallet-tool` on Bitcoin's test net is a great way to learn about Bitcoin and **litecoinj**.
 
 To build an executable shell script that runs the command-line Wallet Tool, use:
 ```
-gradle bitcoinj-tools:installDist
+gradle litecoinj-tools:installDist
 ```
 
 You can now run the `wallet-tool` without parameters to get help on its operation:
@@ -75,10 +72,6 @@ Note: These instructions are for macOS/Linux, for Windows use the `tools/build/i
 ### Example applications
 
 These are found in the `examples` module.
-
-### Where next?
-
-Now you are ready to [follow the tutorial](https://bitcoinj.github.io/getting-started).
 
 ### Testing a SNAPSHOT build
 
