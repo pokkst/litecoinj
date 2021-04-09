@@ -98,7 +98,7 @@ public class MarriedKeyChain extends DeterministicKeyChain {
             if (threshold == 0)
                 threshold = (followingKeys.size() + 1) / 2 + 1;
             if (accountPath == null)
-                accountPath = ACCOUNT_ZERO_PATH;
+                accountPath = BIP44_ACCOUNT_ZERO_PATH;
 
             MarriedKeyChain chain;
             if (random != null)

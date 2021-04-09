@@ -21,6 +21,7 @@ import org.bitcoinj.core.*;
 import org.bitcoinj.script.Script;
 
 import com.google.common.base.MoreObjects;
+import org.bitcoinj.wallet.Wallet;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.math.ec.ECPoint;
 
@@ -503,6 +504,14 @@ public class DeterministicKey extends ECKey {
 
     public String serializePrivB58(NetworkParameters params, Script.ScriptType outputScriptType) {
         return toBase58(serialize(params, false, outputScriptType));
+    }
+
+    public String serializePubB58(NetworkParameters params, Wallet wallet) {
+        return toBase58(serialize(params, true, wallet.getActiveKeyChain().getOutputScriptType()));
+    }
+
+    public String serializePrivB58(NetworkParameters params, Wallet wallet) {
+        return toBase58(serialize(params, false, wallet.getActiveKeyChain().getOutputScriptType()));
     }
 
     public String serializePubB58(NetworkParameters params) {

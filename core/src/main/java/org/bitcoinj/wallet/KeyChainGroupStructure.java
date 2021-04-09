@@ -29,9 +29,9 @@ public interface KeyChainGroupStructure {
         @Override
         public HDPath accountPathFor(Script.ScriptType outputScriptType) {
             if (outputScriptType == null || outputScriptType == Script.ScriptType.P2PKH)
-                return DeterministicKeyChain.ACCOUNT_ZERO_PATH;
+                return DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH;
             else if (outputScriptType == Script.ScriptType.P2WPKH)
-                return DeterministicKeyChain.ACCOUNT_ONE_PATH;
+                return DeterministicKeyChain.BIP84_ACCOUNT_ZERO_PATH;
             else
                 throw new IllegalArgumentException(outputScriptType.toString());
         }

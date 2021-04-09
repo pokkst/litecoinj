@@ -43,8 +43,8 @@ public class MainNetParams extends AbstractBitcoinNetParams {
         segwitAddressHrp = "ltc";
         port = 9333;
         packetMagic = 0xfbc0b6dbL;
-        bip32HeaderP2PKHpub = 0x019da462; // The 4 byte header that serializes in base58 to "xpub".
-        bip32HeaderP2PKHpriv = 0x019d9cfe; // The 4 byte header that serializes in base58 to "xprv"
+        bip32HeaderP2PKHpub = 0x019da462; // The 4 byte header that serializes in base58 to "Ltub".
+        bip32HeaderP2PKHpriv = 0x019d9cfe; // The 4 byte header that serializes in base58 to "Ltpv"
         bip32HeaderP2WPKHpub = 0x04b24746; // The 4 byte header that serializes in base58 to "zpub".
         bip32HeaderP2WPKHpriv = 0x04b2430c; // The 4 byte header that serializes in base58 to "zprv"
 

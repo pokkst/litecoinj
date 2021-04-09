@@ -19,6 +19,7 @@ package wallettemplate;
 import com.google.common.util.concurrent.*;
 import javafx.scene.input.*;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.utils.AppDataDirectory;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Utils;
@@ -27,6 +28,7 @@ import org.bitcoinj.params.*;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.utils.Threading;
+import org.bitcoinj.wallet.DeterministicKeyChain;
 import org.bitcoinj.wallet.DeterministicSeed;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -50,7 +52,7 @@ import static wallettemplate.utils.GuiUtils.*;
 
 public class Main extends Application {
     public static NetworkParameters params = MainNetParams.get();
-    public static final Script.ScriptType PREFERRED_OUTPUT_SCRIPT_TYPE = Script.ScriptType.P2WPKH;
+    public static final Script.ScriptType PREFERRED_OUTPUT_SCRIPT_TYPE = Script.ScriptType.P2PKH;
     public static final String APP_NAME = "WalletTemplate";
     private static final String WALLET_FILE_NAME = APP_NAME.replaceAll("[^a-zA-Z0-9.-]", "_") + "-"
             + params.getPaymentProtocolId() + "-" + PREFERRED_OUTPUT_SCRIPT_TYPE.name();
