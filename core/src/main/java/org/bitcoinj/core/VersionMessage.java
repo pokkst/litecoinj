@@ -44,7 +44,7 @@ import java.util.Objects;
 public class VersionMessage extends Message {
 
     /** The version of this library release, as a string. */
-    public static final String BITCOINJ_VERSION = "0.16-SNAPSHOT";
+    public static final String BITCOINJ_VERSION = "0.1";
     /** The value that is prepended to the subVer field of this application. */
     public static final String LIBRARY_SUBVER = "/litecoinj:" + BITCOINJ_VERSION + "/";
 
@@ -58,8 +58,6 @@ public class VersionMessage extends Message {
     public static final int NODE_WITNESS = 1 << 3;
     /** A service bit that denotes whether the peer has at least the last two days worth of blockchain (BIP159). */
     public static final int NODE_NETWORK_LIMITED = 1 << 10;
-    /** A service bit used by Bitcoin-ABC to announce Bitcoin Cash nodes. */
-    public static final int NODE_BITCOIN_CASH = 1 << 5;
 
     /**
      * The version number of the protocol spoken.
