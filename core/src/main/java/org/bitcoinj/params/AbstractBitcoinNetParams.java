@@ -126,8 +126,10 @@ public abstract class AbstractBitcoinNetParams extends NetworkParameters {
             hash = cursor.getHeader().getPrevBlockHash();
             cursor = blockStore.get(hash);
         }
-        checkState(cursor != null,
-                "No block found for difficulty transition.");
+        if(cursor == null) {
+            log.warn("Difficulty block not found. Either chain is broken or we are using checkpoints.");
+            return;
+        }
         watch.stop();
         if (watch.elapsed(TimeUnit.MILLISECONDS) > 50)
             log.info("Difficulty transition traversal took {}", watch);

@@ -173,8 +173,8 @@ public class BuildCheckpoints implements Callable<Integer> {
     private static void writeBinaryCheckpoints(TreeMap<Integer, StoredBlock> checkpoints, File file) throws Exception {
         MessageDigest digest = Sha256Hash.newDigest();
         try (FileOutputStream fileOutputStream = new FileOutputStream(file, false);
-                DigestOutputStream digestOutputStream = new DigestOutputStream(fileOutputStream, digest);
-                DataOutputStream dataOutputStream = new DataOutputStream(digestOutputStream)) {
+             DigestOutputStream digestOutputStream = new DigestOutputStream(fileOutputStream, digest);
+             DataOutputStream dataOutputStream = new DataOutputStream(digestOutputStream)) {
             digestOutputStream.on(false);
             dataOutputStream.writeBytes("CHECKPOINTS 1");
             dataOutputStream.writeInt(0); // Number of signatures to read. Do this later.
