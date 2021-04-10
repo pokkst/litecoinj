@@ -127,7 +127,7 @@ public abstract class AbstractBitcoinNetParams extends NetworkParameters {
             cursor = blockStore.get(hash);
         }
         if(cursor == null) {
-            log.warn("Difficulty block not found. Either chain is broken or we are using checkpoints.");
+            log.warn("Difficulty block not found. Either chain is broken or we are using checkpoints. This should only occur once upon first sync if using checkpoints.");
             return;
         }
         watch.stop();
