@@ -112,24 +112,29 @@ public abstract class AbstractBitcoinNetParams extends NetworkParameters {
         // two weeks after the initial block chain download.
         final Stopwatch watch = Stopwatch.createStarted();
         Sha256Hash hash = prev.getHash();
-        StoredBlock cursor = blockStore.get(hash);
+        StoredBlock cursor = blockStore.get(hash);;
         long blocksToGoBack = this.getInterval()-1;
         if(storedPrev.getHeight()+1 != this.getInterval()) {
             blocksToGoBack = this.getInterval();
         }
         for (int i = 0; i < blocksToGoBack; i++) {
+            hash = cursor.getHeader().getPrevBlockHash();
+            cursor = blockStore.get(hash);
             if (cursor == null) {
                 // This should never happen. If it does, it means we are following an incorrect or busted chain.
                 throw new VerificationException(
                         "Difficulty transition point but we did not find a way back to the last transition point. Not found: " + hash);
             }
-            hash = cursor.getHeader().getPrevBlockHash();
-            cursor = blockStore.get(hash);
         }
-        if(cursor == null) {
-            log.warn("Difficulty block not found. Either chain is broken or we are using checkpoints. This should only occur once upon first sync if using checkpoints.");
-            return;
+        checkState(cursor != null, "No block found for difficulty transition.");
+        boolean isDifficultyTransitionPoint = false;
+        if(blocksToGoBack == this.getInterval()-1) {
+            isDifficultyTransitionPoint = isDifficultyTransitionPoint(cursor.getHeight()-1);
+        } else if(blocksToGoBack == this.getInterval()) {
+            isDifficultyTransitionPoint = isDifficultyTransitionPoint(cursor.getHeight());
         }
+        checkState(isDifficultyTransitionPoint,
+                "Didn't arrive at a transition point.");
         watch.stop();
         if (watch.elapsed(TimeUnit.MILLISECONDS) > 50)
             log.info("Difficulty transition traversal took {}", watch);
