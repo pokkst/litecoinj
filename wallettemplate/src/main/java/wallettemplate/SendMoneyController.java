@@ -108,6 +108,7 @@ public class SendMoneyController {
         } catch (InsufficientMoneyException e) {
             informationalAlert("Could not empty the wallet",
                     "You may have too little money left in the wallet to make a transaction.");
+            e.printStackTrace();
             overlayUI.done();
         } catch (ECKey.KeyIsEncryptedException e) {
             askForPasswordAndRetry();

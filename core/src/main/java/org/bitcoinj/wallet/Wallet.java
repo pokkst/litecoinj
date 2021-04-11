@@ -69,6 +69,7 @@ import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
 import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener;
 import org.bitcoinj.wallet.listeners.WalletReorganizeEventListener;
+import org.bouncycastle.util.encoders.Hex;
 import org.slf4j.*;
 import org.bouncycastle.crypto.params.*;
 
@@ -317,7 +318,7 @@ public class Wallet extends BaseTaggableObject
      * @param params network parameters
      * @param seed deterministic seed
      * @return a wallet from a deterministic seed with a
-     * {@link DeterministicKeyChain#ACCOUNT_ZERO_PATH 0 hardened path}
+     * {@link DeterministicKeyChain#BIP44_ACCOUNT_ZERO_PATH 0 hardened path}
      * @deprecated Use {@link #fromSeed(NetworkParameters, DeterministicSeed, ScriptType, KeyChainGroupStructure)}
      */
     @Deprecated
@@ -448,6 +449,8 @@ public class Wallet extends BaseTaggableObject
             return Script.ScriptType.P2PKH;
         else if (header == params.getBip32HeaderP2WPKHpub() || header == params.getBip32HeaderP2WPKHpriv())
             return Script.ScriptType.P2WPKH;
+        else if (header == params.getBip32HeaderP2SHP2WPKHpub() || header == params.getBip32HeaderP2SHP2WPKHpriv())
+            return Script.ScriptType.P2SH_P2WPKH;
         else
             throw new IllegalArgumentException(base58.substring(0, 4));
     }
@@ -1195,7 +1198,7 @@ public class Wallet extends BaseTaggableObject
      */
     public ECKey findKeyFromAddress(Address address) {
         final ScriptType scriptType = address.getOutputScriptType();
-        if (scriptType == ScriptType.P2PKH || scriptType == ScriptType.P2WPKH)
+        if (scriptType == ScriptType.P2PKH || scriptType == ScriptType.P2WPKH || scriptType == ScriptType.P2SH_P2WPKH)
             return findKeyFromPubKeyHash(address.getHash(), scriptType);
         else
             return null;
@@ -4365,7 +4368,11 @@ public class Wallet extends BaseTaggableObject
 
                 RedeemData redeemData = txIn.getConnectedRedeemData(maybeDecryptingKeyBag);
                 checkNotNull(redeemData, "Transaction exists in wallet that we cannot redeem: %s", txIn.getOutpoint().getHash());
-                txIn.setScriptSig(scriptPubKey.createEmptyInputScript(redeemData.keys.get(0), redeemData.redeemScript));
+                if(ScriptPattern.isP2SH(scriptPubKey) && ScriptPattern.isP2WPKH(redeemData.redeemScript)) {
+                    txIn.setScriptSig(ScriptBuilder.createEmpty());
+                } else {
+                    txIn.setScriptSig(scriptPubKey.createEmptyInputScript(redeemData.keys.get(0), redeemData.redeemScript));
+                }
                 txIn.setWitness(scriptPubKey.createEmptyWitness(redeemData.keys.get(0)));
             }
 
@@ -4422,7 +4429,8 @@ public class Wallet extends BaseTaggableObject
             if (vUTXOProvider == null) {
                 candidates = new ArrayList<>(myUnspents.size());
                 for (TransactionOutput output : myUnspents) {
-                    if (excludeUnsignable && !canSignFor(output.getScriptPubKey())) continue;
+                    boolean canSignFor = canSignFor(output.getScriptPubKey());
+                    if (excludeUnsignable && !canSignFor) continue;
                     Transaction transaction = checkNotNull(output.getParentTransaction());
                     if (excludeImmatureCoinbases && !transaction.isMature())
                         continue;
@@ -5187,11 +5195,17 @@ public class Wallet extends BaseTaggableObject
                 } else if (ScriptPattern.isP2WPKH(script)) {
                     key = findKeyFromPubKeyHash(ScriptPattern.extractHashFromP2WH(script), Script.ScriptType.P2WPKH);
                     checkNotNull(key, "Coin selection includes unspendable outputs");
-                    vsize += (script.getNumberOfBytesRequiredToSpend(key, redeemScript) + 3) / 4; // round up
+                    vsize += 2 + (script.getNumberOfBytesRequiredToSpend(key, redeemScript) + 3) / 4; // round up
+                    //added a two because sometimes it might be 1 below required, so now it is hopefully 1 above in edge cases
                 } else if (ScriptPattern.isP2SH(script)) {
                     redeemScript = findRedeemDataFromScriptHash(ScriptPattern.extractHashFromP2SH(script)).redeemScript;
-                    checkNotNull(redeemScript, "Coin selection includes unspendable outputs");
-                    vsize += script.getNumberOfBytesRequiredToSpend(key, redeemScript);
+                    if(ScriptPattern.isP2WPKH(redeemScript)) {
+                        checkNotNull(redeemScript, "Coin selection includes unspendable outputs");
+                        vsize += redeemScript.getNumberOfBytesRequiredToSpend(key, redeemScript);
+                    } else {
+                        checkNotNull(redeemScript, "Coin selection includes unspendable outputs");
+                        vsize += script.getNumberOfBytesRequiredToSpend(key, redeemScript);
+                    }
                 } else {
                     vsize += script.getNumberOfBytesRequiredToSpend(key, redeemScript);
                 }

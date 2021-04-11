@@ -67,11 +67,11 @@ public class DeterministicKeyChainTest {
         // serialized data properly.
         long secs = 1389353062L;
         chain = DeterministicKeyChain.builder().entropy(ENTROPY, secs)
-                .accountPath(DeterministicKeyChain.ACCOUNT_ZERO_PATH).outputScriptType(Script.ScriptType.P2PKH).build();
+                .accountPath(DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH).outputScriptType(Script.ScriptType.P2PKH).build();
         chain.setLookaheadSize(10);
 
         segwitChain = DeterministicKeyChain.builder().entropy(ENTROPY, secs)
-                .accountPath(DeterministicKeyChain.ACCOUNT_ONE_PATH).outputScriptType(Script.ScriptType.P2WPKH).build();
+                .accountPath(DeterministicKeyChain.BIP84_ACCOUNT_ZERO_PATH).outputScriptType(Script.ScriptType.P2WPKH).build();
         segwitChain.setLookaheadSize(10);
 
         bip44chain = DeterministicKeyChain.builder().entropy(ENTROPY, secs).accountPath(BIP44_COIN_1_ACCOUNT_ZERO_PATH)
@@ -242,7 +242,7 @@ public class DeterministicKeyChainTest {
         // Round trip the data back and forth to check it is preserved.
         int oldLookaheadSize = chain.getLookaheadSize();
         chain = DeterministicKeyChain.fromProtobuf(keys, null).get(0);
-        assertEquals(DeterministicKeyChain.ACCOUNT_ZERO_PATH, chain.getAccountPath());
+        assertEquals(DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH, chain.getAccountPath());
         assertEquals(EXPECTED_SERIALIZATION, protoToString(chain.serializeToProtobuf()));
         assertEquals(key1, chain.findKeyFromPubHash(key1.getPubKeyHash()));
         assertEquals(key2, chain.findKeyFromPubHash(key2.getPubKeyHash()));
@@ -424,7 +424,7 @@ public class DeterministicKeyChainTest {
         List<Protos.Key> serialization = chain.serializeToProtobuf();
         checkSerialization(serialization, "watching-wallet-serialization.txt");
         chain = DeterministicKeyChain.fromProtobuf(serialization, null).get(0);
-        assertEquals(DeterministicKeyChain.ACCOUNT_ZERO_PATH, chain.getAccountPath());
+        assertEquals(DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH, chain.getAccountPath());
         final DeterministicKey rekey4 = chain.getKey(KeyChain.KeyPurpose.CHANGE);
         assertEquals(key4.getPubKeyPoint(), rekey4.getPubKeyPoint());
     }
@@ -543,7 +543,7 @@ public class DeterministicKeyChainTest {
         List<Protos.Key> serialization = segwitChain.serializeToProtobuf();
         checkSerialization(serialization, "watching-wallet-p2wpkh-serialization.txt");
         final DeterministicKeyChain chain = DeterministicKeyChain.fromProtobuf(serialization, null).get(0);
-        assertEquals(DeterministicKeyChain.ACCOUNT_ONE_PATH, chain.getAccountPath());
+        assertEquals(DeterministicKeyChain.BIP84_ACCOUNT_ZERO_PATH, chain.getAccountPath());
         assertEquals(Script.ScriptType.P2WPKH, chain.getOutputScriptType());
         final DeterministicKey rekey4 = segwitChain.getKey(KeyChain.KeyPurpose.CHANGE);
         assertEquals(key4.getPubKeyPoint(), rekey4.getPubKeyPoint());
@@ -583,7 +583,7 @@ public class DeterministicKeyChainTest {
         List<Protos.Key> serialization = chain.serializeToProtobuf();
         checkSerialization(serialization, "spending-wallet-serialization.txt");
         chain = DeterministicKeyChain.fromProtobuf(serialization, null).get(0);
-        assertEquals(DeterministicKeyChain.ACCOUNT_ZERO_PATH, chain.getAccountPath());
+        assertEquals(DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH, chain.getAccountPath());
         final DeterministicKey rekey4 = chain.getKey(KeyChain.KeyPurpose.CHANGE);
         assertEquals(key4.getPubKeyPoint(), rekey4.getPubKeyPoint());
     }
@@ -701,10 +701,10 @@ public class DeterministicKeyChainTest {
 
     @Test(expected = IllegalStateException.class)
     public void watchingCannotEncrypt() throws Exception {
-        final DeterministicKey accountKey = chain.getKeyByPath(DeterministicKeyChain.ACCOUNT_ZERO_PATH);
+        final DeterministicKey accountKey = chain.getKeyByPath(DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH);
         chain = DeterministicKeyChain.builder().watch(accountKey.dropPrivateBytes().dropParent())
                 .outputScriptType(chain.getOutputScriptType()).build();
-        assertEquals(DeterministicKeyChain.ACCOUNT_ZERO_PATH, chain.getAccountPath());
+        assertEquals(DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH, chain.getAccountPath());
         chain = chain.toEncrypted("this doesn't make any sense");
     }
 

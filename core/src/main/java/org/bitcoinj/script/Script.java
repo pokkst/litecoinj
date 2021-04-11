@@ -59,7 +59,8 @@ public class Script {
         P2PK(2), // pay to pubkey
         P2SH(3), // pay to script hash
         P2WPKH(4), // pay to witness pubkey hash
-        P2WSH(5); // pay to witness script hash
+        P2WSH(5), // pay to witness script hash
+        P2SH_P2WPKH(6);
 
         public final int id;
 
@@ -280,7 +281,7 @@ public class Script {
         else if (ScriptPattern.isP2SH(this))
             return LegacyAddress.fromScriptHash(params, ScriptPattern.extractHashFromP2SH(this));
         else if (forcePayToPubKey && ScriptPattern.isP2PK(this))
-            return LegacyAddress.fromKey(params, ECKey.fromPublicOnly(ScriptPattern.extractKeyFromP2PK(this)));
+            return LegacyAddress.fromKey(params, ECKey.fromPublicOnly(ScriptPattern.extractKeyFromP2PK(this)), ScriptType.P2PKH);
         else if (ScriptPattern.isP2WH(this))
             return SegwitAddress.fromHash(params, ScriptPattern.extractHashFromP2WH(this));
         else

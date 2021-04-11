@@ -73,6 +73,8 @@ public class TestNet3Params extends AbstractBitcoinNetParams {
         bip32HeaderP2PKHpriv = 0x04358394; // The 4 byte header that serializes in base58 to "tprv"
         bip32HeaderP2WPKHpub = 0x045f1cf6; // The 4 byte header that serializes in base58 to "vpub".
         bip32HeaderP2WPKHpriv = 0x045f18bc; // The 4 byte header that serializes in base58 to "vprv"
+        bip32HeaderP2SHP2WPKHpub = 0x044a5262; // The 4 byte header that serializes in base58 to "upub".
+        bip32HeaderP2SHP2WPKHpriv = 0x044a4e28; // The 4 byte header that serializes in base58 to "uprv"
 
         majorityEnforceBlockUpgrade = TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
         majorityRejectBlockOutdated = TESTNET_MAJORITY_REJECT_BLOCK_OUTDATED;

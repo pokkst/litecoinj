@@ -1093,7 +1093,7 @@ public class WalletTool implements Callable<Integer> {
         if (!key.isCompressed())
             System.out.println("WARNING: Importing an uncompressed key");
         wallet.importKey(key);
-        System.out.print("Addresses: " + LegacyAddress.fromKey(params, key));
+        System.out.print("Addresses: " + LegacyAddress.fromKey(params, key, ScriptType.P2PKH));
         if (key.isCompressed())
             System.out.print("," + SegwitAddress.fromKey(params, key));
         System.out.println();

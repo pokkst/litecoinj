@@ -32,6 +32,8 @@ public interface KeyChainGroupStructure {
                 return DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH;
             else if (outputScriptType == Script.ScriptType.P2WPKH)
                 return DeterministicKeyChain.BIP84_ACCOUNT_ZERO_PATH;
+            else if(outputScriptType == Script.ScriptType.P2SH_P2WPKH)
+                return DeterministicKeyChain.BIP49_ACCOUNT_ZERO_PATH;
             else
                 throw new IllegalArgumentException(outputScriptType.toString());
         }
