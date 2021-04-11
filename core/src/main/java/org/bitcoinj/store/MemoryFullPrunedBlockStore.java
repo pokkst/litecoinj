@@ -18,6 +18,7 @@ package org.bitcoinj.store;
 
 import org.bitcoinj.core.*;
 import com.google.common.base.Preconditions;
+import org.bitcoinj.script.Script;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -416,7 +417,7 @@ public class MemoryFullPrunedBlockStore implements FullPrunedBlockStore {
         for (UTXO output : outputsList) {
             for (ECKey key : keys) {
                 // TODO switch to pubKeyHash in order to support native segwit addresses
-                Address address = LegacyAddress.fromKey(params, key);
+                Address address = LegacyAddress.fromKey(params, key, Script.ScriptType.P2PKH);
                 if (output.getAddress().equals(address.toString())) {
                     foundOutputs.add(output);
                 }

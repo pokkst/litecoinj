@@ -80,8 +80,8 @@ public abstract class Address extends PrefixedChecksummedBytes implements Compar
      * @return constructed address
      */
     public static Address fromKey(final NetworkParameters params, final ECKey key, final ScriptType outputScriptType) {
-        if (outputScriptType == Script.ScriptType.P2PKH)
-            return LegacyAddress.fromKey(params, key);
+        if (outputScriptType == Script.ScriptType.P2PKH || outputScriptType == ScriptType.P2SH_P2WPKH)
+            return LegacyAddress.fromKey(params, key, outputScriptType);
         else if (outputScriptType == Script.ScriptType.P2WPKH)
             return SegwitAddress.fromKey(params, key);
         else

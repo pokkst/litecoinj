@@ -25,7 +25,10 @@ import javax.annotation.Nullable;
 
 import com.google.common.primitives.UnsignedBytes;
 import org.bitcoinj.params.Networks;
+import org.bitcoinj.script.Script;
 import org.bitcoinj.script.Script.ScriptType;
+import org.bitcoinj.script.ScriptBuilder;
+import org.bitcoinj.script.ScriptPattern;
 
 /**
  * <p>A Bitcoin address looks like 1MsScoe2fTJoq4ZPdQgqyhgWeoNamYPevy and is derived from an elliptic curve public key
@@ -50,7 +53,7 @@ public class LegacyAddress extends Address {
     /**
      * Private constructor. Use {@link #fromBase58(NetworkParameters, String)},
      * {@link #fromPubKeyHash(NetworkParameters, byte[])}, {@link #fromScriptHash(NetworkParameters, byte[])} or
-     * {@link #fromKey(NetworkParameters, ECKey)}.
+     * {@link #fromKey(NetworkParameters, ECKey, ScriptType)}.
      * 
      * @param params
      *            network this address is valid for
@@ -91,8 +94,15 @@ public class LegacyAddress extends Address {
      *            only the public part is used
      * @return constructed address
      */
-    public static LegacyAddress fromKey(NetworkParameters params, ECKey key) {
-        return fromPubKeyHash(params, key.getPubKeyHash());
+    public static LegacyAddress fromKey(NetworkParameters params, ECKey key, ScriptType outputScriptType) {
+        if(outputScriptType == ScriptType.P2PKH) {
+            return fromPubKeyHash(params, key.getPubKeyHash());
+        } else if(outputScriptType == ScriptType.P2SH_P2WPKH) {
+            Script script = ScriptBuilder.createP2SHP2WPKHOutputScript(key);
+            return fromScriptHash(params, ScriptPattern.extractHashFromP2SH(script));
+        } else {
+            throw new IllegalArgumentException("Prohibited output script type: " + outputScriptType);
+        }
     }
 
     /**
