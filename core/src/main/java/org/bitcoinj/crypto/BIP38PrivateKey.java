@@ -17,6 +17,7 @@
 package org.bitcoinj.crypto;
 
 import org.bitcoinj.core.*;
+import org.bitcoinj.script.Script;
 import org.bouncycastle.crypto.generators.SCrypt;
 
 import com.google.common.primitives.Bytes;
@@ -118,7 +119,7 @@ public class BIP38PrivateKey extends PrefixedChecksummedBytes {
     public ECKey decrypt(String passphrase) throws BadPassphraseException {
         String normalizedPassphrase = Normalizer.normalize(passphrase, Normalizer.Form.NFC);
         ECKey key = ecMultiply ? decryptEC(normalizedPassphrase) : decryptNoEC(normalizedPassphrase);
-        Sha256Hash hash = Sha256Hash.twiceOf(LegacyAddress.fromKey(params, key).toString().getBytes(StandardCharsets.US_ASCII));
+        Sha256Hash hash = Sha256Hash.twiceOf(LegacyAddress.fromKey(params, key, Script.ScriptType.P2PKH).toString().getBytes(StandardCharsets.US_ASCII));
         byte[] actualAddressHash = Arrays.copyOfRange(hash.getBytes(), 0, 4);
         if (!Arrays.equals(actualAddressHash, addressHash))
             throw new BadPassphraseException();

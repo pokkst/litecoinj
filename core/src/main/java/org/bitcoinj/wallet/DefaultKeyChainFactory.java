@@ -32,6 +32,8 @@ public class DefaultKeyChainFactory implements KeyChainFactory {
         DeterministicKeyChain chain;
         if (isMarried)
             chain = new MarriedKeyChain(seed, crypter, outputScriptType, accountPath);
+        else if(outputScriptType == Script.ScriptType.P2SH_P2WPKH)
+            chain = new NestedSegwitKeyChain(seed, crypter, outputScriptType, accountPath);
         else
             chain = new DeterministicKeyChain(seed, crypter, outputScriptType, accountPath);
         return chain;
@@ -45,6 +47,8 @@ public class DefaultKeyChainFactory implements KeyChainFactory {
             chain = new MarriedKeyChain(accountKey, outputScriptType);
         else if (isFollowingKey)
             chain = DeterministicKeyChain.builder().watchAndFollow(accountKey).outputScriptType(outputScriptType).build();
+        else if(outputScriptType == Script.ScriptType.P2SH_P2WPKH)
+            chain = NestedSegwitKeyChain.builder().watch(accountKey).outputScriptType(outputScriptType).build();
         else
             chain = DeterministicKeyChain.builder().watch(accountKey).outputScriptType(outputScriptType).build();
         return chain;
@@ -56,6 +60,8 @@ public class DefaultKeyChainFactory implements KeyChainFactory {
         DeterministicKeyChain chain;
         if (isMarried)
             chain = new MarriedKeyChain(accountKey, outputScriptType);
+        else if (outputScriptType == Script.ScriptType.P2SH_P2WPKH)
+            chain = NestedSegwitKeyChain.builder().spend(accountKey).outputScriptType(outputScriptType).build();
         else
             chain = DeterministicKeyChain.builder().spend(accountKey).outputScriptType(outputScriptType).build();
         return chain;

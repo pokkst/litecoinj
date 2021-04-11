@@ -518,12 +518,12 @@ public class KeyChainGroupTest {
     public void addAndActivateHDChain_freshCurrentAddress() {
         DeterministicSeed seed = new DeterministicSeed(ENTROPY, "", 0);
         DeterministicKeyChain chain1 = DeterministicKeyChain.builder().seed(seed)
-                .accountPath(DeterministicKeyChain.ACCOUNT_ZERO_PATH).outputScriptType(Script.ScriptType.P2PKH).build();
+                .accountPath(DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH).outputScriptType(Script.ScriptType.P2PKH).build();
         group = KeyChainGroup.builder(MAINNET).addChain(chain1).build();
         assertEquals("1M5T5k9yKtGWRtWYMjQtGx3K2sshrABzCT", group.currentAddress(KeyPurpose.RECEIVE_FUNDS).toString());
 
         final DeterministicKeyChain chain2 = DeterministicKeyChain.builder().seed(seed)
-                .accountPath(DeterministicKeyChain.ACCOUNT_ONE_PATH).outputScriptType(Script.ScriptType.P2PKH).build();
+                .accountPath(DeterministicKeyChain.BIP84_ACCOUNT_ZERO_PATH).outputScriptType(Script.ScriptType.P2PKH).build();
         group.addAndActivateHDChain(chain2);
         assertEquals("1JLnjJEXcyByAaW6sqSxNvGiiSEWRhdvPb", group.currentAddress(KeyPurpose.RECEIVE_FUNDS).toString());
 
@@ -676,7 +676,7 @@ public class KeyChainGroupTest {
     public void segwitKeyChainGroup() throws Exception {
         group = KeyChainGroup.builder(MAINNET).lookaheadSize(LOOKAHEAD_SIZE)
                 .addChain(DeterministicKeyChain.builder().entropy(ENTROPY, 0).outputScriptType(Script.ScriptType.P2WPKH)
-                        .accountPath(DeterministicKeyChain.ACCOUNT_ONE_PATH).build())
+                        .accountPath(DeterministicKeyChain.BIP44_ACCOUNT_ZERO_PATH).build())
                 .build();
         assertEquals(Script.ScriptType.P2WPKH, group.getActiveKeyChain().getOutputScriptType());
         assertEquals("bc1qhcurdec849thpjjp3e27atvya43gy2snrechd9",

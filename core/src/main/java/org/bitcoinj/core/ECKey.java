@@ -1295,7 +1295,7 @@ public class ECKey implements EncryptableItem {
         if (outputScriptType != null) {
             builder.append(Address.fromKey(params, this, outputScriptType));
         } else {
-            builder.append(LegacyAddress.fromKey(params, this));
+            builder.append(LegacyAddress.fromKey(params, this, Script.ScriptType.P2PKH));
             if (isCompressed())
                 builder.append(',').append(SegwitAddress.fromKey(params, this));
         }

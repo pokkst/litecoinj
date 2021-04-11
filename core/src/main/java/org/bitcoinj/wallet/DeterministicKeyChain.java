@@ -117,6 +117,9 @@ public class DeterministicKeyChain implements EncryptableKeyChain {
     // m / 44' / 2' / 0'
     public static final HDPath BIP44_ACCOUNT_ZERO_PATH = HDPath.M(new ChildNumber(44, true))
             .extend(new ChildNumber(2, true), ChildNumber.ZERO_HARDENED);
+    // m / 49' / 2' / 0'
+    public static final HDPath BIP49_ACCOUNT_ZERO_PATH = HDPath.M(new ChildNumber(49, true))
+            .extend(new ChildNumber(2, true), ChildNumber.ZERO_HARDENED);
     // m / 44' / 2' / 0'
     public static final HDPath BIP84_ACCOUNT_ZERO_PATH = HDPath.M(new ChildNumber(84, true))
             .extend(new ChildNumber(2, true), ChildNumber.ZERO_HARDENED);
@@ -363,7 +366,8 @@ public class DeterministicKeyChain implements EncryptableKeyChain {
     protected DeterministicKeyChain(DeterministicSeed seed, @Nullable KeyCrypter crypter,
             Script.ScriptType outputScriptType, List<ChildNumber> accountPath) {
         checkArgument(outputScriptType == null || outputScriptType == Script.ScriptType.P2PKH
-                || outputScriptType == Script.ScriptType.P2WPKH, "Only P2PKH or P2WPKH allowed.");
+                || outputScriptType == Script.ScriptType.P2WPKH
+                || outputScriptType == Script.ScriptType.P2SH_P2WPKH, "Only P2PKH or P2WPKH allowed.");
         this.outputScriptType = outputScriptType != null ? outputScriptType : Script.ScriptType.P2PKH;
         this.accountPath = HDPath.M(accountPath);
         this.seed = seed;
@@ -1358,6 +1362,10 @@ public class DeterministicKeyChain implements EncryptableKeyChain {
      * @see org.bitcoinj.wallet.MarriedKeyChain
      */
     public boolean isMarried() {
+        return false;
+    }
+
+    public boolean isNestedSegwit() {
         return false;
     }
 
