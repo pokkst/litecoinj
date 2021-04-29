@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
-import static org.bitcoinj.core.Coin.*;
-import static org.bitcoinj.core.NetworkParameters.MAX_MONEY;
+import static org.litecoinj.core.Coin.*;
+import static org.litecoinj.core.NetworkParameters.MAX_MONEY;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;

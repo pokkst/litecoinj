@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
 import com.google.common.base.*;
 import com.google.common.collect.*;
 import com.google.common.util.concurrent.*;
-import org.bitcoinj.core.listeners.*;
-import org.bitcoinj.net.*;
-import org.bitcoinj.params.*;
-import org.bitcoinj.store.*;
-import org.bitcoinj.utils.*;
+import org.litecoinj.core.listeners.*;
+import org.litecoinj.net.*;
+import org.litecoinj.params.*;
+import org.litecoinj.store.*;
+import org.litecoinj.utils.*;
 import org.slf4j.*;
 
 import java.io.*;
@@ -33,8 +33,8 @@ import java.util.*;
 import java.util.concurrent.atomic.*;
 
 /**
- * A tool for comparing the blocks which are accepted/rejected by bitcoind/bitcoinj
- * It is designed to run as a testnet-in-a-box network between a single bitcoind node and bitcoinj
+ * A tool for comparing the blocks which are accepted/rejected by bitcoind/litecoinj
+ * It is designed to run as a testnet-in-a-box network between a single bitcoind node and litecoinj
  * It is not an automated unit-test because it requires a bit more set-up...read comments below
  */
 public class BitcoindComparisonTool {
@@ -51,7 +51,7 @@ public class BitcoindComparisonTool {
 
     public static void main(String[] args) throws Exception {
         BriefLogFormatter.init();
-        System.out.println("USAGE: bitcoinjBlockStoreLocation runExpensiveTests(1/0) [port=18444]");
+        System.out.println("USAGE: litecoinjBlockStoreLocation runExpensiveTests(1/0) [port=18444]");
         boolean runExpensiveTests = args.length > 1 && Integer.parseInt(args[1]) == 1;
 
         Context ctx = new Context(PARAMS);
@@ -302,7 +302,7 @@ public class BitcoindComparisonTool {
                 bitcoind.ping().get();
                 if (!chain.getChainHead().getHeader().getHash().equals(bitcoindChainHead)) {
                     rulesSinceFirstFail++;
-                    log.error("ERROR: bitcoind and bitcoinj acceptance differs on block \"" + block.ruleName + "\"");
+                    log.error("ERROR: bitcoind and litecoinj acceptance differs on block \"" + block.ruleName + "\"");
                 }
                 if (block.sendOnce)
                     preloadedBlocks.remove(nextBlock.getHash());

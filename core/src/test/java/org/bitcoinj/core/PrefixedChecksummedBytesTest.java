@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 bitcoinj project
+ * Copyright 2014 litecoinj project
  * Copyright 2019 Tim Strasser
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +15,18 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.TestNet3Params;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.params.TestNet3Params;
 import org.easymock.EasyMockRunner;
 import org.easymock.Mock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.bitcoinj.core.Utils.HEX;
+import static org.litecoinj.core.Utils.HEX;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.easymock.EasyMock.expect;

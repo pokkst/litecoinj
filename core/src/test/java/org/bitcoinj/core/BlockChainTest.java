@@ -15,18 +15,18 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.TestNet3Params;
-import org.bitcoinj.params.UnitTestParams;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.store.BlockStore;
-import org.bitcoinj.store.MemoryBlockStore;
-import org.bitcoinj.testing.FakeTxBuilder;
-import org.bitcoinj.utils.BriefLogFormatter;
-import org.bitcoinj.wallet.Wallet;
-import org.bitcoinj.wallet.Wallet.BalanceType;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.params.TestNet3Params;
+import org.litecoinj.params.UnitTestParams;
+import org.litecoinj.script.Script;
+import org.litecoinj.store.BlockStore;
+import org.litecoinj.store.MemoryBlockStore;
+import org.litecoinj.testing.FakeTxBuilder;
+import org.litecoinj.utils.BriefLogFormatter;
+import org.litecoinj.wallet.Wallet;
+import org.litecoinj.wallet.Wallet.BalanceType;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import org.junit.rules.ExpectedException;
@@ -39,9 +39,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static org.bitcoinj.core.Coin.*;
-import static org.bitcoinj.testing.FakeTxBuilder.createFakeBlock;
-import static org.bitcoinj.testing.FakeTxBuilder.createFakeTx;
+import static org.litecoinj.core.Coin.*;
+import static org.litecoinj.testing.FakeTxBuilder.createFakeBlock;
+import static org.litecoinj.testing.FakeTxBuilder.createFakeTx;
 import static org.junit.Assert.*;
 
 // Handling of chain splits/reorgs are in ChainSplitTests.

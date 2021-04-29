@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.script;
+package org.litecoinj.script;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Assert;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
-import static org.bitcoinj.script.ScriptOpCodes.*;
+import static org.litecoinj.script.ScriptOpCodes.*;
 
 /**
  * ScriptChunk.size() determines the size of a serialized ScriptChunk without actually performing serialization.

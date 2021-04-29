@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
-import org.bitcoinj.params.*;
-import org.bitcoinj.testing.*;
-import org.bitcoinj.utils.*;
+import org.litecoinj.params.*;
+import org.litecoinj.testing.*;
+import org.litecoinj.utils.*;
 import org.junit.*;
 
 import java.net.*;
 
-import static org.bitcoinj.core.Coin.COIN;
+import static org.litecoinj.core.Coin.COIN;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;

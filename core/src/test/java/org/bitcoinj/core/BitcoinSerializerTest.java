@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.TestNet3Params;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.params.TestNet3Params;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -27,7 +27,7 @@ import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import static org.bitcoinj.core.Utils.HEX;
+import static org.litecoinj.core.Utils.HEX;
 import static org.junit.Assert.*;
 
 public class BitcoinSerializerTest {

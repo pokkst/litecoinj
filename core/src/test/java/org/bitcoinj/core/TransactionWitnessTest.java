@@ -12,12 +12,12 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
 import static org.junit.Assert.*;
 
-import org.bitcoinj.crypto.TransactionSignature;
-import org.bitcoinj.script.Script;
+import org.litecoinj.crypto.TransactionSignature;
+import org.litecoinj.script.Script;
 import org.bouncycastle.util.encoders.Hex;
 import org.junit.Test;
 

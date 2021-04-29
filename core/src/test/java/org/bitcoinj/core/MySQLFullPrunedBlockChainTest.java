@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
-import org.bitcoinj.store.BlockStoreException;
-import org.bitcoinj.store.FullPrunedBlockStore;
-import org.bitcoinj.store.MySQLFullPrunedBlockStore;
+import org.litecoinj.store.BlockStoreException;
+import org.litecoinj.store.FullPrunedBlockStore;
+import org.litecoinj.store.MySQLFullPrunedBlockStore;
 import org.junit.After;
 import org.junit.Ignore;
 
@@ -35,8 +35,8 @@ public class MySQLFullPrunedBlockChainTest extends AbstractFullPrunedBlockChainT
 
     // Replace these with your mysql location/credentials and remove @Ignore to test
     private static final String DB_HOSTNAME = "localhost";
-    private static final String DB_NAME = "bitcoinj_test";
-    private static final String DB_USERNAME = "bitcoinj";
+    private static final String DB_NAME = "litecoinj_test";
+    private static final String DB_USERNAME = "litecoinj";
     private static final String DB_PASSWORD = "password";
 
     @Override

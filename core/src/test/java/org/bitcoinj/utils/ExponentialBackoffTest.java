@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.utils;
+package org.litecoinj.utils;
 
-import org.bitcoinj.core.Utils;
+import org.litecoinj.core.Utils;
 
 import org.junit.Before;
 import org.junit.Test;

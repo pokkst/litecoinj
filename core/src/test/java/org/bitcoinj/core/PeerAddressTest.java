@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
-import static org.bitcoinj.core.Utils.HEX;
+import static org.litecoinj.core.Utils.HEX;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
 import java.net.InetAddress;
 
-import org.bitcoinj.params.MainNetParams;
+import org.litecoinj.params.MainNetParams;
 import org.junit.Test;
 
 public class PeerAddressTest {

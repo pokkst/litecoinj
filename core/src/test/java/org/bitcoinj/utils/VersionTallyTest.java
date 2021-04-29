@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.utils;
+package org.litecoinj.utils;
 
-import org.bitcoinj.core.BlockChain;
-import org.bitcoinj.core.Context;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.StoredBlock;
-import org.bitcoinj.core.Utils;
-import org.bitcoinj.params.UnitTestParams;
-import org.bitcoinj.store.BlockStore;
-import org.bitcoinj.store.BlockStoreException;
-import org.bitcoinj.store.MemoryBlockStore;
-import org.bitcoinj.testing.FakeTxBuilder;
+import org.litecoinj.core.BlockChain;
+import org.litecoinj.core.Context;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.StoredBlock;
+import org.litecoinj.core.Utils;
+import org.litecoinj.params.UnitTestParams;
+import org.litecoinj.store.BlockStore;
+import org.litecoinj.store.BlockStoreException;
+import org.litecoinj.store.MemoryBlockStore;
+import org.litecoinj.testing.FakeTxBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;

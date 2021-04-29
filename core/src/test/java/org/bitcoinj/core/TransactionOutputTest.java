@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
 import com.google.common.collect.ImmutableList;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.script.ScriptBuilder;
-import org.bitcoinj.script.ScriptPattern;
-import org.bitcoinj.testing.TestWithWallet;
-import org.bitcoinj.wallet.SendRequest;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.script.Script;
+import org.litecoinj.script.ScriptBuilder;
+import org.litecoinj.script.ScriptPattern;
+import org.litecoinj.testing.TestWithWallet;
+import org.litecoinj.wallet.SendRequest;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;

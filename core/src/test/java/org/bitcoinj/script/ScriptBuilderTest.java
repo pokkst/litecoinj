@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.script;
+package org.litecoinj.script;
 
-import static org.bitcoinj.script.ScriptOpCodes.OP_FALSE;
-import static org.bitcoinj.script.ScriptOpCodes.OP_TRUE;
+import static org.litecoinj.script.ScriptOpCodes.OP_FALSE;
+import static org.litecoinj.script.ScriptOpCodes.OP_TRUE;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

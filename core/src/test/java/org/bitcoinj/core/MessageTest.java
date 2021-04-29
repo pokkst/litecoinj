@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
-import org.bitcoinj.params.UnitTestParams;
+import org.litecoinj.params.UnitTestParams;
 import org.junit.Test;
 
 public class MessageTest {

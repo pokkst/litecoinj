@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.utils;
+package org.litecoinj.utils;
 
-import static org.bitcoinj.utils.Fiat.parseFiat;
+import static org.litecoinj.utils.Fiat.parseFiat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

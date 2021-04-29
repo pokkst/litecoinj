@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.protocols.payments;
+package org.litecoinj.protocols.payments;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.LegacyAddress;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.Utils;
-import org.bitcoinj.crypto.X509Utils;
-import org.bitcoinj.params.TestNet3Params;
-import org.bitcoinj.params.UnitTestParams;
-import org.bitcoinj.protocols.payments.PaymentProtocol.Output;
-import org.bitcoinj.protocols.payments.PaymentProtocol.PkiVerificationData;
-import org.bitcoinj.protocols.payments.PaymentProtocolException.PkiVerificationException;
-import org.bitcoinj.script.ScriptBuilder;
-import org.bitcoinj.testing.FakeTxBuilder;
+import org.litecoinj.core.Address;
+import org.litecoinj.core.Coin;
+import org.litecoinj.core.ECKey;
+import org.litecoinj.core.LegacyAddress;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.Transaction;
+import org.litecoinj.core.Utils;
+import org.litecoinj.crypto.X509Utils;
+import org.litecoinj.params.TestNet3Params;
+import org.litecoinj.params.UnitTestParams;
+import org.litecoinj.protocols.payments.PaymentProtocol.Output;
+import org.litecoinj.protocols.payments.PaymentProtocol.PkiVerificationData;
+import org.litecoinj.protocols.payments.PaymentProtocolException.PkiVerificationException;
+import org.litecoinj.script.ScriptBuilder;
+import org.litecoinj.testing.FakeTxBuilder;
 import org.bitcoin.protocols.payments.Protos;
 import org.bitcoin.protocols.payments.Protos.Payment;
 import org.bitcoin.protocols.payments.Protos.PaymentACK;

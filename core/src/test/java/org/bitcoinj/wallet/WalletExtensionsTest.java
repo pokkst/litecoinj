@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.wallet;
+package org.litecoinj.wallet;
 
-import org.bitcoinj.testing.FooWalletExtension;
-import org.bitcoinj.testing.TestWithWallet;
+import org.litecoinj.testing.FooWalletExtension;
+import org.litecoinj.testing.TestWithWallet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
