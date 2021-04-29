@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.examples;
+package org.litecoinj.examples;
 
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Utils;
-import org.bitcoinj.params.TestNet3Params;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.wallet.DeterministicSeed;
-import org.bitcoinj.wallet.Wallet;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.Utils;
+import org.litecoinj.params.TestNet3Params;
+import org.litecoinj.script.Script;
+import org.litecoinj.wallet.DeterministicSeed;
+import org.litecoinj.wallet.Wallet;
 
 /**
  * The following example shows you how to create a deterministic seed from a hierarchical deterministic wallet represented as a mnemonic code.

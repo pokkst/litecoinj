@@ -51,20 +51,20 @@ You can now run the `wallet-tool` without parameters to get help on its operatio
 ./tools/build/install/wallet-tool/bin/wallet-tool
 ```
 
-To create a test net wallet file in `~/bitcoinj/bitcoinj-test.wallet`, you would use:
+To create a test net wallet file in `~/litecoinj/litecoinj-test.wallet`, you would use:
 ```
-mkdir ~/bitcoinj
-./tools/build/install/wallet-tool/bin/wallet-tool --net=TEST --wallet=$HOME/bitcoinj/bitcoinj-test.wallet create
-```
-
-To sync the newly created wallet in `~/bitcoinj/bitcoinj-test.wallet` with the test net, you would use:
-```
-./tools/build/install/wallet-tool/bin/wallet-tool --net=TEST --wallet=$HOME/bitcoinj/bitcoinj-test.wallet sync
+mkdir ~/litecoinj
+./tools/build/install/wallet-tool/bin/wallet-tool --net=TEST --wallet=$HOME/litecoinj/litecoinj-test.wallet create
 ```
 
-To dump the state of the wallet in `~/bitcoinj/bitcoinj-test.wallet` with the test net, you would use:
+To sync the newly created wallet in `~/litecoinj/litecoinj-test.wallet` with the test net, you would use:
 ```
-./tools/build/install/wallet-tool/bin/wallet-tool --net=TEST --wallet=$HOME/bitcoinj/bitcoinj-test.wallet dump
+./tools/build/install/wallet-tool/bin/wallet-tool --net=TEST --wallet=$HOME/litecoinj/litecoinj-test.wallet sync
+```
+
+To dump the state of the wallet in `~/litecoinj/litecoinj-test.wallet` with the test net, you would use:
+```
+./tools/build/install/wallet-tool/bin/wallet-tool --net=TEST --wallet=$HOME/litecoinj/litecoinj-test.wallet dump
 ```
 
 Note: These instructions are for macOS/Linux, for Windows use the `tools/build/install/wallet-tool/bin/wallet-tool.bat` batch file with the equivalent Windows command-line commands and options.

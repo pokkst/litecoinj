@@ -15,24 +15,24 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.examples;
+package org.litecoinj.examples;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.InsufficientMoneyException;
-import org.bitcoinj.core.LegacyAddress;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionConfidence;
-import org.bitcoinj.crypto.KeyCrypterException;
-import org.bitcoinj.kits.WalletAppKit;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.RegTestParams;
-import org.bitcoinj.params.TestNet3Params;
-import org.bitcoinj.utils.BriefLogFormatter;
-import org.bitcoinj.wallet.SendRequest;
-import org.bitcoinj.wallet.Wallet;
-import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
+import org.litecoinj.core.Address;
+import org.litecoinj.core.Coin;
+import org.litecoinj.core.InsufficientMoneyException;
+import org.litecoinj.core.LegacyAddress;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.Transaction;
+import org.litecoinj.core.TransactionConfidence;
+import org.litecoinj.crypto.KeyCrypterException;
+import org.litecoinj.kits.WalletAppKit;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.params.RegTestParams;
+import org.litecoinj.params.TestNet3Params;
+import org.litecoinj.utils.BriefLogFormatter;
+import org.litecoinj.wallet.SendRequest;
+import org.litecoinj.wallet.Wallet;
+import org.litecoinj.wallet.listeners.WalletCoinsReceivedEventListener;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -92,7 +92,7 @@ public class ForwardingService {
 
         // We want to know when we receive money.
         kit.wallet().addCoinsReceivedEventListener((w, tx, prevBalance, newBalance) -> {
-            // Runs in the dedicated "user thread" (see bitcoinj docs for more info on this).
+            // Runs in the dedicated "user thread" (see litecoinj docs for more info on this).
             //
             // The transaction "tx" can either be pending, or included into a block (we didn't see the broadcast).
             Coin value = tx.getValueSentToMe(w);

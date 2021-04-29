@@ -18,18 +18,18 @@ package wallettemplate;
 
 import com.google.common.util.concurrent.*;
 import javafx.scene.input.*;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.crypto.DeterministicKey;
-import org.bitcoinj.utils.AppDataDirectory;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Utils;
-import org.bitcoinj.kits.WalletAppKit;
-import org.bitcoinj.params.*;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.utils.BriefLogFormatter;
-import org.bitcoinj.utils.Threading;
-import org.bitcoinj.wallet.DeterministicKeyChain;
-import org.bitcoinj.wallet.DeterministicSeed;
+import org.litecoinj.core.Transaction;
+import org.litecoinj.crypto.DeterministicKey;
+import org.litecoinj.utils.AppDataDirectory;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.Utils;
+import org.litecoinj.kits.WalletAppKit;
+import org.litecoinj.params.*;
+import org.litecoinj.script.Script;
+import org.litecoinj.utils.BriefLogFormatter;
+import org.litecoinj.utils.Threading;
+import org.litecoinj.wallet.DeterministicKeyChain;
+import org.litecoinj.wallet.DeterministicSeed;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -108,7 +108,7 @@ public class Main extends Application {
 
         // Make log output concise.
         BriefLogFormatter.init();
-        // Tell bitcoinj to run event handlers on the JavaFX UI thread. This keeps things simple and means
+        // Tell litecoinj to run event handlers on the JavaFX UI thread. This keeps things simple and means
         // we cannot forget to switch threads when adding event handlers. Unfortunately, the DownloadListener
         // we give to the app kit is currently an exception and runs on a library thread. It'll get fixed in
         // a future version.

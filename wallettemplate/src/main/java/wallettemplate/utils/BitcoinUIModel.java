@@ -16,12 +16,12 @@
 
 package wallettemplate.utils;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.listeners.DownloadProgressTracker;
-import org.bitcoinj.wallet.Wallet;
-import org.bitcoinj.wallet.listeners.CurrentKeyChangeEventListener;
-import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
+import org.litecoinj.core.Address;
+import org.litecoinj.core.Coin;
+import org.litecoinj.core.listeners.DownloadProgressTracker;
+import org.litecoinj.wallet.Wallet;
+import org.litecoinj.wallet.listeners.CurrentKeyChangeEventListener;
+import org.litecoinj.wallet.listeners.WalletChangeEventListener;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;

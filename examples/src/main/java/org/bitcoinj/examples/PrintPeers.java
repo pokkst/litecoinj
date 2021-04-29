@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.examples;
+package org.litecoinj.examples;
 
-import org.bitcoinj.core.listeners.PeerConnectedEventListener;
-import org.bitcoinj.core.listeners.PeerDisconnectedEventListener;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Peer;
-import org.bitcoinj.core.PeerAddress;
-import org.bitcoinj.core.VersionMessage;
-import org.bitcoinj.net.discovery.DnsDiscovery;
-import org.bitcoinj.net.discovery.PeerDiscoveryException;
-import org.bitcoinj.net.NioClientManager;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.utils.BriefLogFormatter;
+import org.litecoinj.core.listeners.PeerConnectedEventListener;
+import org.litecoinj.core.listeners.PeerDisconnectedEventListener;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.Peer;
+import org.litecoinj.core.PeerAddress;
+import org.litecoinj.core.VersionMessage;
+import org.litecoinj.net.discovery.DnsDiscovery;
+import org.litecoinj.net.discovery.PeerDiscoveryException;
+import org.litecoinj.net.NioClientManager;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.utils.BriefLogFormatter;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;

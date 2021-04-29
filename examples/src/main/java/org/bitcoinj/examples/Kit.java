@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.examples;
+package org.litecoinj.examples;
 
-import org.bitcoinj.core.*;
-import org.bitcoinj.kits.WalletAppKit;
-import org.bitcoinj.params.TestNet3Params;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.wallet.Wallet;
-import org.bitcoinj.wallet.listeners.KeyChainEventListener;
-import org.bitcoinj.wallet.listeners.ScriptsChangeEventListener;
-import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
-import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener;
+import org.litecoinj.core.*;
+import org.litecoinj.kits.WalletAppKit;
+import org.litecoinj.params.TestNet3Params;
+import org.litecoinj.script.Script;
+import org.litecoinj.wallet.Wallet;
+import org.litecoinj.wallet.listeners.KeyChainEventListener;
+import org.litecoinj.wallet.listeners.ScriptsChangeEventListener;
+import org.litecoinj.wallet.listeners.WalletCoinsReceivedEventListener;
+import org.litecoinj.wallet.listeners.WalletCoinsSentEventListener;
 
 import java.io.File;
 import java.util.List;
 
-import org.bitcoinj.core.listeners.TransactionConfidenceEventListener;
+import org.litecoinj.core.listeners.TransactionConfidenceEventListener;
 
 /**
- * The following example shows how to use the by bitcoinj provided WalletAppKit.
- * The WalletAppKit class wraps the boilerplate (Peers, BlockChain, BlockStorage, Wallet) needed to set up a new SPV bitcoinj app.
+ * The following example shows how to use the by litecoinj provided WalletAppKit.
+ * The WalletAppKit class wraps the boilerplate (Peers, BlockChain, BlockStorage, Wallet) needed to set up a new SPV litecoinj app.
  * 
  * In this example we also define a WalletEventListener class with implementors that are called when the wallet changes (for example sending/receiving money)
  */
@@ -49,11 +49,11 @@ public class Kit {
         // While developing your application you probably want to use the Regtest mode and run your local bitcoin network. Run bitcoind with the -regtest flag
         // To test you app with a real network you can use the testnet. The testnet is an alternative bitcoin network that follows the same rules as main network. Coins are worth nothing and you can get coins for example from http://faucet.xeno-genesis.com/
         // 
-        // For more information have a look at: https://bitcoinj.github.io/testing and https://bitcoin.org/en/developer-examples#testing-applications
+        // For more information have a look at: https://litecoinj.github.io/testing and https://bitcoin.org/en/developer-examples#testing-applications
         NetworkParameters params = TestNet3Params.get();
 
         // Now we initialize a new WalletAppKit. The kit handles all the boilerplate for us and is the easiest way to get everything up and running.
-        // Have a look at the WalletAppKit documentation and its source to understand what's happening behind the scenes: https://github.com/bitcoinj/bitcoinj/blob/master/core/src/main/java/org/bitcoinj/kits/WalletAppKit.java
+        // Have a look at the WalletAppKit documentation and its source to understand what's happening behind the scenes: https://github.com/litecoinj/litecoinj/blob/master/core/src/main/java/org/litecoinj/kits/WalletAppKit.java
         WalletAppKit kit = new WalletAppKit(params, new File("."), "walletappkit-example");
 
         // In case you want to connect with your local bitcoind tell the kit to connect to localhost.
@@ -61,7 +61,7 @@ public class Kit {
         //kit.connectToLocalHost();
 
         // Now we start the kit and sync the blockchain.
-        // bitcoinj is working a lot with the Google Guava libraries. The WalletAppKit extends the AbstractIdleService. Have a look at the introduction to Guava services: https://github.com/google/guava/wiki/ServiceExplained
+        // litecoinj is working a lot with the Google Guava libraries. The WalletAppKit extends the AbstractIdleService. Have a look at the introduction to Guava services: https://github.com/google/guava/wiki/ServiceExplained
         kit.startAsync();
         kit.awaitRunning();
 

@@ -13,5 +13,5 @@ allprojects {
         mavenCentral()
     }
 
-    group = 'org.bitcoinj'
+    group = 'org.litecoinj'
 }
