@@ -13,13 +13,13 @@ if (GradleVersion.current().compareTo(minGradleVersion) < 0) {
 }
 
 include 'core'
-project(':core').name = 'bitcoinj-core'
+project(':core').name = 'litecoinj-core'
 
-include 'tools'
-project(':tools').name = 'bitcoinj-tools'
+//include 'tools'
+//project(':tools').name = 'bitcoinj-tools'
 
-include 'examples'
-project(':examples').name = 'bitcoinj-examples'
+//include 'examples'
+//project(':examples').name = 'bitcoinj-examples'
 
 if (GradleVersion.current().compareTo(minFxGradleVersion) >= 0 && JavaVersion.current().isJava11Compatible()) {
     System.err.println "Including wallettemplate because ${GradleVersion.current()} and Java ${JavaVersion.current()}"

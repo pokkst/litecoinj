@@ -31,7 +31,7 @@ import static org.bitcoin.NativeSecp256k1Util.*;
  *
  * <p>You can find an example library that can be used for this at https://github.com/bitcoin/secp256k1</p>
  *
- * <p>To build secp256k1 for use with bitcoinj, run
+ * <p>To build secp256k1 for use with litecoinj, run
  * `./configure --enable-jni --enable-experimental --enable-module-schnorr --enable-module-ecdh`
  * and `make` then copy `.libs/libsecp256k1.so` to your system library path
  * or point the JVM to the folder containing it with -Djava.library.path
