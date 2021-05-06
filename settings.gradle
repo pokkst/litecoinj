@@ -15,8 +15,8 @@ if (GradleVersion.current().compareTo(minGradleVersion) < 0) {
 include 'core'
 project(':core').name = 'litecoinj-core'
 
-//include 'tools'
-//project(':tools').name = 'litecoinj-tools'
+include 'tools'
+project(':tools').name = 'litecoinj-tools'
 
 //include 'examples'
 //project(':examples').name = 'litecoinj-examples'
