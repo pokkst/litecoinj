@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.crypto;
+package org.litecoinj.crypto;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,9 +27,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import static org.bitcoinj.core.Utils.HEX;
-import static org.bitcoinj.core.Utils.SPACE_JOINER;
-import static org.bitcoinj.core.Utils.WHITESPACE_SPLITTER;
+import static org.litecoinj.core.Utils.HEX;
+import static org.litecoinj.core.Utils.SPACE_JOINER;
+import static org.litecoinj.core.Utils.WHITESPACE_SPLITTER;
 import static org.junit.Assert.assertEquals;
 
 /**

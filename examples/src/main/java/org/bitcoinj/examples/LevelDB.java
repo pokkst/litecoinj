@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.examples;
+package org.litecoinj.examples;
 
 import java.net.InetAddress;
-import org.bitcoinj.core.FullPrunedBlockChain;
-import org.bitcoinj.core.PeerGroup;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.store.FullPrunedBlockStore;
-import org.bitcoinj.store.LevelDBFullPrunedBlockStore;
+import org.litecoinj.core.FullPrunedBlockChain;
+import org.litecoinj.core.PeerGroup;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.store.FullPrunedBlockStore;
+import org.litecoinj.store.LevelDBFullPrunedBlockStore;
 
 public class LevelDB {
     public static void main(String[] args) throws Exception {

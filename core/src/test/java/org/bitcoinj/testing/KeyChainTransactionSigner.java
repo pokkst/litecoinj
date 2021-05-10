@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.testing;
+package org.litecoinj.testing;
 
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.crypto.ChildNumber;
-import org.bitcoinj.crypto.DeterministicKey;
-import org.bitcoinj.signers.CustomTransactionSigner;
-import org.bitcoinj.wallet.DeterministicKeyChain;
+import org.litecoinj.core.Sha256Hash;
+import org.litecoinj.crypto.ChildNumber;
+import org.litecoinj.crypto.DeterministicKey;
+import org.litecoinj.signers.CustomTransactionSigner;
+import org.litecoinj.wallet.DeterministicKeyChain;
 import com.google.common.collect.ImmutableList;
 
 import java.util.List;

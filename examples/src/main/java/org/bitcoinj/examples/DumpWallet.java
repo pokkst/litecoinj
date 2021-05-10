@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.examples;
+package org.litecoinj.examples;
 
 import java.io.File;
 
-import org.bitcoinj.wallet.Wallet;
+import org.litecoinj.wallet.Wallet;
 
 /**
  * DumpWallet loads a serialized wallet and prints information about what it contains.

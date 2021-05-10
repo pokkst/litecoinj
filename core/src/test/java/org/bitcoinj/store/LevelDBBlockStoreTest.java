@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.store;
+package org.litecoinj.store;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Context;
-import org.bitcoinj.core.LegacyAddress;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.StoredBlock;
-import org.bitcoinj.core.Utils;
-import org.bitcoinj.params.*;
+import org.litecoinj.core.Address;
+import org.litecoinj.core.Context;
+import org.litecoinj.core.LegacyAddress;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.StoredBlock;
+import org.litecoinj.core.Utils;
+import org.litecoinj.params.*;
 import org.junit.*;
 
 import java.io.*;

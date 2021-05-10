@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.script;
+package org.litecoinj.script;
 
-import static org.bitcoinj.script.ScriptOpCodes.OP_0;
-import static org.bitcoinj.script.ScriptOpCodes.OP_IF;
-import static org.bitcoinj.script.ScriptOpCodes.OP_PUSHDATA1;
-import static org.bitcoinj.script.ScriptOpCodes.OP_PUSHDATA2;
-import static org.bitcoinj.script.ScriptOpCodes.OP_PUSHDATA4;
+import static org.litecoinj.script.ScriptOpCodes.OP_0;
+import static org.litecoinj.script.ScriptOpCodes.OP_IF;
+import static org.litecoinj.script.ScriptOpCodes.OP_PUSHDATA1;
+import static org.litecoinj.script.ScriptOpCodes.OP_PUSHDATA2;
+import static org.litecoinj.script.ScriptOpCodes.OP_PUSHDATA4;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -46,7 +46,7 @@ public class ScriptChunkTest {
 
     @Test
     public void testToStringOnInvalidScriptChunk() {
-        // see https://github.com/bitcoinj/bitcoinj/issues/1860
+        // see https://github.com/litecoinj/litecoinj/issues/1860
         // In summary: toString() throws when given an invalid ScriptChunk.
         // It should perhaps be impossible to even construct such a ScriptChunk, but
         // until that is the case, toString() should not throw.

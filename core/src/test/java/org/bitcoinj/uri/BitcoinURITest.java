@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.uri;
+package org.litecoinj.uri;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.LegacyAddress;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.TestNet3Params;
+import org.litecoinj.core.Address;
+import org.litecoinj.core.LegacyAddress;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.params.TestNet3Params;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
-import static org.bitcoinj.core.Coin.*;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.SegwitAddress;
+import static org.litecoinj.core.Coin.*;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.SegwitAddress;
 
 import static org.junit.Assert.*;
 

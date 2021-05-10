@@ -15,21 +15,21 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.protocols.payments;
+package org.litecoinj.protocols.payments;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.Context;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.LegacyAddress;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionInput;
-import org.bitcoinj.core.TransactionOutput;
-import org.bitcoinj.core.Utils;
-import org.bitcoinj.crypto.TrustStoreLoader;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.TestNet3Params;
+import org.litecoinj.core.Address;
+import org.litecoinj.core.Coin;
+import org.litecoinj.core.Context;
+import org.litecoinj.core.ECKey;
+import org.litecoinj.core.LegacyAddress;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.Transaction;
+import org.litecoinj.core.TransactionInput;
+import org.litecoinj.core.TransactionOutput;
+import org.litecoinj.core.Utils;
+import org.litecoinj.crypto.TrustStoreLoader;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.params.TestNet3Params;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.protobuf.ByteString;
 import org.bitcoin.protocols.payments.Protos;
@@ -42,7 +42,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static org.bitcoinj.core.Coin.COIN;
+import static org.litecoinj.core.Coin.COIN;
 import static org.junit.Assert.*;
 
 public class PaymentSessionTest {

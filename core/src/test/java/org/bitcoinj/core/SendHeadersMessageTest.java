@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
-import org.bitcoinj.params.RegTestParams;
+import org.litecoinj.params.RegTestParams;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
 
-import static org.bitcoinj.core.Utils.HEX;
+import static org.litecoinj.core.Utils.HEX;
 import static org.junit.Assert.assertTrue;
 
 public class SendHeadersMessageTest {

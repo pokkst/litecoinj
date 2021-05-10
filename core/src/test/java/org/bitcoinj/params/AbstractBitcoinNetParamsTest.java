@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.params;
+package org.litecoinj.params;
 
-import org.bitcoinj.core.Coin;
+import org.litecoinj.core.Coin;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

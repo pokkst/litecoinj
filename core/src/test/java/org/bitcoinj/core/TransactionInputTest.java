@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
-import org.bitcoinj.params.UnitTestParams;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.script.ScriptBuilder;
-import org.bitcoinj.testing.FakeTxBuilder;
-import org.bitcoinj.wallet.AllowUnconfirmedCoinSelector;
-import org.bitcoinj.wallet.SendRequest;
-import org.bitcoinj.wallet.Wallet;
+import org.litecoinj.params.UnitTestParams;
+import org.litecoinj.script.Script;
+import org.litecoinj.script.ScriptBuilder;
+import org.litecoinj.testing.FakeTxBuilder;
+import org.litecoinj.wallet.AllowUnconfirmedCoinSelector;
+import org.litecoinj.wallet.SendRequest;
+import org.litecoinj.wallet.Wallet;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;

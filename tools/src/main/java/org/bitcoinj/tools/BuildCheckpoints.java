@@ -15,18 +15,18 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.tools;
+package org.litecoinj.tools;
 
-import org.bitcoinj.core.listeners.NewBestBlockListener;
-import org.bitcoinj.core.*;
-import org.bitcoinj.net.discovery.DnsDiscovery;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.RegTestParams;
-import org.bitcoinj.params.TestNet3Params;
-import org.bitcoinj.store.BlockStore;
-import org.bitcoinj.store.MemoryBlockStore;
-import org.bitcoinj.utils.BriefLogFormatter;
-import org.bitcoinj.utils.Threading;
+import org.litecoinj.core.listeners.NewBestBlockListener;
+import org.litecoinj.core.*;
+import org.litecoinj.net.discovery.DnsDiscovery;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.params.RegTestParams;
+import org.litecoinj.params.TestNet3Params;
+import org.litecoinj.store.BlockStore;
+import org.litecoinj.store.MemoryBlockStore;
+import org.litecoinj.utils.BriefLogFormatter;
+import org.litecoinj.utils.Threading;
 import com.google.common.io.Resources;
 import picocli.CommandLine;
 
@@ -94,7 +94,7 @@ public class BuildCheckpoints implements Callable<Integer> {
                 throw new RuntimeException("Unreachable.");
         }
 
-        // Configure bitcoinj to fetch only headers, not save them to disk, connect to a local fully synced/validated
+        // Configure litecoinj to fetch only headers, not save them to disk, connect to a local fully synced/validated
         // node and to save block headers that are on interval boundaries, as long as they are <1 month old.
         final BlockStore store = new MemoryBlockStore(params);
         final BlockChain chain = new BlockChain(params, store);

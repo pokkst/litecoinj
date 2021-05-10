@@ -15,36 +15,36 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.testing;
+package org.litecoinj.testing;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Block;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.LegacyAddress;
-import org.bitcoinj.core.MessageSerializer;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.ProtocolException;
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.StoredBlock;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionConfidence;
-import org.bitcoinj.core.TransactionInput;
-import org.bitcoinj.core.TransactionOutPoint;
-import org.bitcoinj.core.TransactionOutput;
-import org.bitcoinj.core.Utils;
-import org.bitcoinj.core.VerificationException;
-import org.bitcoinj.crypto.TransactionSignature;
-import org.bitcoinj.script.ScriptBuilder;
-import org.bitcoinj.store.BlockStore;
-import org.bitcoinj.store.BlockStoreException;
+import org.litecoinj.core.Address;
+import org.litecoinj.core.Block;
+import org.litecoinj.core.Coin;
+import org.litecoinj.core.ECKey;
+import org.litecoinj.core.LegacyAddress;
+import org.litecoinj.core.MessageSerializer;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.ProtocolException;
+import org.litecoinj.core.Sha256Hash;
+import org.litecoinj.core.StoredBlock;
+import org.litecoinj.core.Transaction;
+import org.litecoinj.core.TransactionConfidence;
+import org.litecoinj.core.TransactionInput;
+import org.litecoinj.core.TransactionOutPoint;
+import org.litecoinj.core.TransactionOutput;
+import org.litecoinj.core.Utils;
+import org.litecoinj.core.VerificationException;
+import org.litecoinj.crypto.TransactionSignature;
+import org.litecoinj.script.ScriptBuilder;
+import org.litecoinj.store.BlockStore;
+import org.litecoinj.store.BlockStoreException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
-import static org.bitcoinj.core.Coin.*;
+import static org.litecoinj.core.Coin.*;
 import static com.google.common.base.Preconditions.checkState;
 
 public class FakeTxBuilder {

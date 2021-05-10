@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
 import java.math.BigInteger;
 import java.util.Date;

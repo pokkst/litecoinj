@@ -15,22 +15,22 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.wallet;
+package org.litecoinj.wallet;
 
 import com.google.common.collect.*;
-import org.bitcoinj.core.*;
-import org.bitcoinj.crypto.*;
-import org.bitcoinj.params.*;
-import org.bitcoinj.script.*;
-import org.bitcoinj.testing.FakeTxBuilder;
-import org.bitcoinj.wallet.DefaultRiskAnalysis.*;
+import org.litecoinj.core.*;
+import org.litecoinj.crypto.*;
+import org.litecoinj.params.*;
+import org.litecoinj.script.*;
+import org.litecoinj.testing.FakeTxBuilder;
+import org.litecoinj.wallet.DefaultRiskAnalysis.*;
 import org.junit.*;
 
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.bitcoinj.core.Coin.*;
-import static org.bitcoinj.script.ScriptOpCodes.*;
+import static org.litecoinj.core.Coin.*;
+import static org.litecoinj.script.ScriptOpCodes.*;
 import static org.junit.Assert.*;
 
 public class DefaultRiskAnalysisTest {

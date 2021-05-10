@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -28,8 +28,8 @@ import java.io.ObjectOutputStream;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.TestNet3Params;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.params.TestNet3Params;
 
 public class DumpedPrivateKeyTest {
     private static final NetworkParameters MAINNET = MainNetParams.get();

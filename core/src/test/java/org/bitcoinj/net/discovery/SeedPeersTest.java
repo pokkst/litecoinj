@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.net.discovery;
+package org.litecoinj.net.discovery;
 
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.params.MainNetParams;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.params.MainNetParams;
 import org.junit.Test;
 
 import java.net.InetSocketAddress;

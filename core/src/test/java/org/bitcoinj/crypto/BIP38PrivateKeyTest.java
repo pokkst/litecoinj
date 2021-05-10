@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.crypto;
+package org.litecoinj.crypto;
 
-import org.bitcoinj.core.AddressFormatException;
-import org.bitcoinj.core.Base58;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.crypto.BIP38PrivateKey.BadPassphraseException;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.TestNet3Params;
+import org.litecoinj.core.AddressFormatException;
+import org.litecoinj.core.Base58;
+import org.litecoinj.core.ECKey;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.crypto.BIP38PrivateKey.BadPassphraseException;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.params.TestNet3Params;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;

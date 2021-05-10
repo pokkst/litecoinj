@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.crypto;
+package org.litecoinj.crypto;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Assert;

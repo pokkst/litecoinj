@@ -15,21 +15,21 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.examples;
+package org.litecoinj.examples;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Base58;
-import org.bitcoinj.core.BlockChain;
-import org.bitcoinj.core.DumpedPrivateKey;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.LegacyAddress;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.PeerAddress;
-import org.bitcoinj.core.PeerGroup;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.store.MemoryBlockStore;
-import org.bitcoinj.wallet.Wallet;
+import org.litecoinj.core.Address;
+import org.litecoinj.core.Base58;
+import org.litecoinj.core.BlockChain;
+import org.litecoinj.core.DumpedPrivateKey;
+import org.litecoinj.core.ECKey;
+import org.litecoinj.core.LegacyAddress;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.PeerAddress;
+import org.litecoinj.core.PeerGroup;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.script.Script;
+import org.litecoinj.store.MemoryBlockStore;
+import org.litecoinj.wallet.Wallet;
 
 import java.math.BigInteger;
 import java.net.InetAddress;

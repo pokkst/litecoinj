@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.crypto;
+package org.litecoinj.crypto;
 
-import org.bitcoinj.core.*;
-import org.bitcoinj.params.*;
+import org.litecoinj.core.*;
+import org.litecoinj.params.*;
 import org.junit.*;
 import org.bouncycastle.crypto.params.*;
 
-import static org.bitcoinj.core.Utils.*;
+import static org.litecoinj.core.Utils.*;
 import static org.junit.Assert.*;
 
 /**

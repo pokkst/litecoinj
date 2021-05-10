@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.testing;
+package org.litecoinj.testing;
 
-import org.bitcoinj.wallet.Wallet;
-import org.bitcoinj.wallet.WalletExtension;
+import org.litecoinj.wallet.Wallet;
+import org.litecoinj.wallet.WalletExtension;
 
 import java.util.Arrays;
 

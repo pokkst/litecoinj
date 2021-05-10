@@ -21,8 +21,8 @@ import javafx.event.*;
 import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import org.bitcoinj.crypto.*;
-import org.bitcoinj.wallet.*;
+import org.litecoinj.crypto.*;
+import org.litecoinj.wallet.*;
 import org.slf4j.*;
 import org.bouncycastle.crypto.params.*;
 

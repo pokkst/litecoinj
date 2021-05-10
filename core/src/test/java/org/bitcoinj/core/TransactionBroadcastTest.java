@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
 import com.google.common.util.concurrent.*;
-import org.bitcoinj.core.listeners.TransactionConfidenceEventListener;
-import org.bitcoinj.testing.*;
-import org.bitcoinj.utils.*;
-import org.bitcoinj.wallet.SendRequest;
-import org.bitcoinj.wallet.Wallet;
+import org.litecoinj.core.listeners.TransactionConfidenceEventListener;
+import org.litecoinj.testing.*;
+import org.litecoinj.utils.*;
+import org.litecoinj.wallet.SendRequest;
+import org.litecoinj.wallet.Wallet;
 import org.junit.*;
 import org.junit.runner.*;
 import org.junit.runners.*;
@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import static com.google.common.base.Preconditions.*;
-import static org.bitcoinj.core.Coin.*;
+import static org.litecoinj.core.Coin.*;
 import static org.junit.Assert.*;
 
 @RunWith(value = Parameterized.class)

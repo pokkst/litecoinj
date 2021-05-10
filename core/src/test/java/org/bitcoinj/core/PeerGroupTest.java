@@ -15,17 +15,17 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.core;
+package org.litecoinj.core;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.*;
 import com.google.common.util.concurrent.*;
-import org.bitcoinj.core.listeners.*;
-import org.bitcoinj.net.discovery.*;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.testing.*;
-import org.bitcoinj.utils.*;
-import org.bitcoinj.wallet.Wallet;
+import org.litecoinj.core.listeners.*;
+import org.litecoinj.net.discovery.*;
+import org.litecoinj.script.Script;
+import org.litecoinj.testing.*;
+import org.litecoinj.utils.*;
+import org.litecoinj.wallet.Wallet;
 import org.junit.*;
 import org.junit.runner.*;
 import org.junit.runners.*;
@@ -36,7 +36,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
-import static org.bitcoinj.core.Coin.*;
+import static org.litecoinj.core.Coin.*;
 import static org.junit.Assert.*;
 
 

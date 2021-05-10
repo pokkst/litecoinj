@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.testing;
+package org.litecoinj.testing;
 
-import org.bitcoinj.core.AbstractBlockChain;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Block;
-import org.bitcoinj.core.BlockChain;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.Context;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.Utils;
-import org.bitcoinj.core.VerificationException;
-import org.bitcoinj.params.MainNetParams;
-import org.bitcoinj.params.UnitTestParams;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.store.BlockStore;
-import org.bitcoinj.store.MemoryBlockStore;
-import org.bitcoinj.utils.BriefLogFormatter;
-import org.bitcoinj.wallet.Wallet;
+import org.litecoinj.core.AbstractBlockChain;
+import org.litecoinj.core.Address;
+import org.litecoinj.core.Block;
+import org.litecoinj.core.BlockChain;
+import org.litecoinj.core.Coin;
+import org.litecoinj.core.Context;
+import org.litecoinj.core.ECKey;
+import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.core.Transaction;
+import org.litecoinj.core.Utils;
+import org.litecoinj.core.VerificationException;
+import org.litecoinj.params.MainNetParams;
+import org.litecoinj.params.UnitTestParams;
+import org.litecoinj.script.Script;
+import org.litecoinj.store.BlockStore;
+import org.litecoinj.store.MemoryBlockStore;
+import org.litecoinj.utils.BriefLogFormatter;
+import org.litecoinj.wallet.Wallet;
 import org.junit.BeforeClass;
 
 import javax.annotation.Nullable;
 
-import static org.bitcoinj.testing.FakeTxBuilder.createFakeBlock;
-import static org.bitcoinj.testing.FakeTxBuilder.createFakeTx;
+import static org.litecoinj.testing.FakeTxBuilder.createFakeBlock;
+import static org.litecoinj.testing.FakeTxBuilder.createFakeTx;
 
 // TODO: This needs to be somewhat rewritten - the "sendMoneyToWallet" methods aren't sending via the block chain object
 

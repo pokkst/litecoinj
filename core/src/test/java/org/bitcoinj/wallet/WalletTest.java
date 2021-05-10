@@ -15,55 +15,55 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.wallet;
+package org.litecoinj.wallet;
 
-import org.bitcoinj.core.listeners.TransactionConfidenceEventListener;
-import org.bitcoinj.core.AbstractBlockChain;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Block;
-import org.bitcoinj.core.BlockChain;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.InsufficientMoneyException;
-import org.bitcoinj.core.LegacyAddress;
-import org.bitcoinj.core.PeerAddress;
-import org.bitcoinj.core.SegwitAddress;
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.StoredBlock;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionConfidence;
-import org.bitcoinj.core.TransactionInput;
-import org.bitcoinj.core.TransactionOutPoint;
-import org.bitcoinj.core.TransactionOutput;
-import org.bitcoinj.core.Utils;
-import org.bitcoinj.core.VerificationException;
-import org.bitcoinj.core.TransactionConfidence.ConfidenceType;
-import org.bitcoinj.crypto.*;
-import org.bitcoinj.script.Script;
-import org.bitcoinj.script.ScriptBuilder;
-import org.bitcoinj.script.ScriptChunk;
-import org.bitcoinj.script.ScriptPattern;
-import org.bitcoinj.signers.TransactionSigner;
-import org.bitcoinj.store.BlockStoreException;
-import org.bitcoinj.store.MemoryBlockStore;
-import org.bitcoinj.testing.*;
-import org.bitcoinj.utils.ExchangeRate;
-import org.bitcoinj.utils.Fiat;
-import org.bitcoinj.utils.Threading;
-import org.bitcoinj.wallet.Wallet.BalanceType;
-import org.bitcoinj.wallet.WalletTransaction.Pool;
-import org.bitcoinj.wallet.listeners.KeyChainEventListener;
-import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
-import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
-import org.bitcoinj.wallet.listeners.WalletCoinsSentEventListener;
+import org.litecoinj.core.listeners.TransactionConfidenceEventListener;
+import org.litecoinj.core.AbstractBlockChain;
+import org.litecoinj.core.Address;
+import org.litecoinj.core.Block;
+import org.litecoinj.core.BlockChain;
+import org.litecoinj.core.Coin;
+import org.litecoinj.core.ECKey;
+import org.litecoinj.core.InsufficientMoneyException;
+import org.litecoinj.core.LegacyAddress;
+import org.litecoinj.core.PeerAddress;
+import org.litecoinj.core.SegwitAddress;
+import org.litecoinj.core.Sha256Hash;
+import org.litecoinj.core.StoredBlock;
+import org.litecoinj.core.Transaction;
+import org.litecoinj.core.TransactionConfidence;
+import org.litecoinj.core.TransactionInput;
+import org.litecoinj.core.TransactionOutPoint;
+import org.litecoinj.core.TransactionOutput;
+import org.litecoinj.core.Utils;
+import org.litecoinj.core.VerificationException;
+import org.litecoinj.core.TransactionConfidence.ConfidenceType;
+import org.litecoinj.crypto.*;
+import org.litecoinj.script.Script;
+import org.litecoinj.script.ScriptBuilder;
+import org.litecoinj.script.ScriptChunk;
+import org.litecoinj.script.ScriptPattern;
+import org.litecoinj.signers.TransactionSigner;
+import org.litecoinj.store.BlockStoreException;
+import org.litecoinj.store.MemoryBlockStore;
+import org.litecoinj.testing.*;
+import org.litecoinj.utils.ExchangeRate;
+import org.litecoinj.utils.Fiat;
+import org.litecoinj.utils.Threading;
+import org.litecoinj.wallet.Wallet.BalanceType;
+import org.litecoinj.wallet.WalletTransaction.Pool;
+import org.litecoinj.wallet.listeners.KeyChainEventListener;
+import org.litecoinj.wallet.listeners.WalletChangeEventListener;
+import org.litecoinj.wallet.listeners.WalletCoinsReceivedEventListener;
+import org.litecoinj.wallet.listeners.WalletCoinsSentEventListener;
 import org.easymock.EasyMock;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import org.bitcoinj.wallet.KeyChain.KeyPurpose;
-import org.bitcoinj.wallet.Protos.Wallet.EncryptionType;
+import org.litecoinj.wallet.KeyChain.KeyPurpose;
+import org.litecoinj.wallet.Protos.Wallet.EncryptionType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,9 +82,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.bitcoinj.core.Coin.*;
-import static org.bitcoinj.core.Utils.HEX;
-import static org.bitcoinj.testing.FakeTxBuilder.*;
+import static org.litecoinj.core.Coin.*;
+import static org.litecoinj.core.Utils.HEX;
+import static org.litecoinj.testing.FakeTxBuilder.*;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.replay;
 import static org.hamcrest.Matchers.closeTo;
@@ -840,7 +840,7 @@ public class WalletTest extends TestWithWallet {
         Transaction send1 = checkNotNull(wallet.createSend(OTHER_ADDRESS, value2));
         Transaction send2 = checkNotNull(wallet.createSend(OTHER_ADDRESS, value2));
         byte[] buf = send1.bitcoinSerialize();
-        buf[43] = 0;  // Break the signature: bitcoinj won't check in SPV mode and this is easier than other mutations.
+        buf[43] = 0;  // Break the signature: litecoinj won't check in SPV mode and this is easier than other mutations.
         send1 = UNITTEST.getDefaultSerializer().makeTransaction(buf);
         wallet.commitTx(send2);
         assertEquals(value, wallet.getBalance(BalanceType.ESTIMATED));
@@ -1769,7 +1769,7 @@ public class WalletTest extends TestWithWallet {
     @Test
     public void autosaveImmediate() throws Exception {
         // Test that the wallet will save itself automatically when it changes.
-        File f = File.createTempFile("bitcoinj-unit-test", null);
+        File f = File.createTempFile("litecoinj-unit-test", null);
         Sha256Hash hash1 = Sha256Hash.of(f);
         // Start with zero delay and ensure the wallet file changes after adding a key.
         wallet.autosaveToFile(f, 0, TimeUnit.SECONDS, null);
@@ -1791,7 +1791,7 @@ public class WalletTest extends TestWithWallet {
         // an auto-save cycle of 1 second.
         final File[] results = new File[2];
         final CountDownLatch latch = new CountDownLatch(3);
-        File f = File.createTempFile("bitcoinj-unit-test", null);
+        File f = File.createTempFile("litecoinj-unit-test", null);
         Sha256Hash hash1 = Sha256Hash.of(f);
         wallet.autosaveToFile(f, 1, TimeUnit.SECONDS,
                 new WalletFiles.Listener() {

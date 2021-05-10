@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.bitcoinj.testing;
+package org.litecoinj.testing;
 
 import com.google.common.base.*;
 import com.google.common.util.concurrent.*;
-import org.bitcoinj.core.*;
-import org.bitcoinj.net.*;
-import org.bitcoinj.store.*;
-import org.bitcoinj.utils.*;
+import org.litecoinj.core.*;
+import org.litecoinj.net.*;
+import org.litecoinj.store.*;
+import org.litecoinj.utils.*;
 import org.junit.Rule;
 import org.junit.rules.Timeout;
 
