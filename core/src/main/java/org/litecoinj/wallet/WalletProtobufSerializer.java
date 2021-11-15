@@ -17,7 +17,6 @@
 
 package org.litecoinj.wallet;
 
-import com.google.protobuf.Message;
 import org.litecoinj.core.Coin;
 import org.litecoinj.core.NetworkParameters;
 import org.litecoinj.core.PeerAddress;
@@ -40,7 +39,6 @@ import org.litecoinj.wallet.Protos.Wallet.EncryptionType;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
-import com.google.protobuf.TextFormat;
 import com.google.protobuf.WireFormat;
 
 import org.slf4j.Logger;
@@ -156,15 +154,14 @@ public class WalletProtobufSerializer {
     }
 
     /**
-     * Returns the given wallet formatted as text. The text format is that used by protocol buffers and although it
-     * can also be parsed using {@link TextFormat#merge(CharSequence, Message.Builder)},
+     * Returns the given wallet formatted as text. The text format is that used by protocol buffers and
      * it is designed more for debugging than storage. It is not well specified and wallets are largely binary data
      * structures anyway, consisting as they do of keys (large random numbers) and {@link Transaction}s which also
      * mostly contain keys and hashes.
      */
     public String walletToText(Wallet wallet) {
         Protos.Wallet walletProto = walletToProto(wallet);
-        return TextFormat.printToString(walletProto);
+        return walletProto.toString();
     }
 
     /**
@@ -804,9 +801,8 @@ public class WalletProtobufSerializer {
                 throw new UnreadableWalletException("Peer IP address does not have the right length", e);
             }
             int port = proto.getPort();
-            int protocolVersion = params.getProtocolVersionNum(NetworkParameters.ProtocolVersion.CURRENT);
             BigInteger services = BigInteger.valueOf(proto.getServices());
-            PeerAddress address = new PeerAddress(params, ip, port, protocolVersion, services);
+            PeerAddress address = new PeerAddress(params, ip, port, services);
             confidence.markBroadcastBy(address);
         }
         if (confidenceProto.hasLastBroadcastedAt())

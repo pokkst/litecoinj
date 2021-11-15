@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package wallettemplate.controls;
+package org.bitcoinj.walletfx.controls;
 
 import org.litecoinj.core.Address;
 import org.litecoinj.core.AddressFormatException;
@@ -22,7 +22,7 @@ import org.litecoinj.core.NetworkParameters;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
-import wallettemplate.utils.TextFieldValidator;
+import org.bitcoinj.walletfx.utils.TextFieldValidator;
 
 /**
  * Given a text field, some network params and optionally some nodes, will make the text field an angry red colour

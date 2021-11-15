@@ -30,21 +30,24 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import org.bitcoinj.walletfx.application.WalletApplication;
+import org.bitcoinj.walletfx.overlay.OverlayController;
+import org.bitcoinj.walletfx.overlay.OverlayableStackPaneController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bouncycastle.crypto.params.KeyParameter;
-import wallettemplate.utils.KeyDerivationTasks;
+import org.bitcoinj.walletfx.utils.KeyDerivationTasks;
 
 import java.time.Duration;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static wallettemplate.utils.GuiUtils.*;
+import static org.bitcoinj.walletfx.utils.GuiUtils.*;
 
 /**
  * User interface for entering a password on demand, e.g. to send money. Also used when encrypting a wallet. Shows a
  * progress meter as we scrypt the password.
  */
-public class WalletPasswordController {
+public class WalletPasswordController implements OverlayController<WalletPasswordController> {
     private static final Logger log = LoggerFactory.getLogger(WalletPasswordController.class);
 
     @FXML HBox buttonsBox;
@@ -54,11 +57,20 @@ public class WalletPasswordController {
     @FXML GridPane widgetGrid;
     @FXML Label explanationLabel;
 
-    public Main.OverlayUI overlayUI;
+    private WalletApplication app;
+    private OverlayableStackPaneController rootController;
+    private OverlayableStackPaneController.OverlayUI<? extends OverlayController<WalletPasswordController>> overlayUI;
 
     private SimpleObjectProperty<KeyParameter> aesKey = new SimpleObjectProperty<>();
 
+    @Override
+    public void initOverlay(OverlayableStackPaneController overlayableStackPaneController, OverlayableStackPaneController.OverlayUI<? extends OverlayController<WalletPasswordController>> ui) {
+        rootController = overlayableStackPaneController;
+        overlayUI = ui;
+    }
+
     public void initialize() {
+        app = WalletApplication.instance();
         progressMeter.setOpacity(0);
         Platform.runLater(pass1::requestFocus);
     }
@@ -70,13 +82,13 @@ public class WalletPasswordController {
             return;
         }
 
-        final KeyCrypterScrypt keyCrypter = (KeyCrypterScrypt) Main.bitcoin.wallet().getKeyCrypter();
+        final KeyCrypterScrypt keyCrypter = (KeyCrypterScrypt) app.walletAppKit().wallet().getKeyCrypter();
         checkNotNull(keyCrypter);   // We should never arrive at this GUI if the wallet isn't actually encrypted.
         KeyDerivationTasks tasks = new KeyDerivationTasks(keyCrypter, password, getTargetTime()) {
             @Override
             protected final void onFinish(KeyParameter aesKey, int timeTakenMsec) {
                 checkGuiThread();
-                if (Main.bitcoin.wallet().checkAESKey(aesKey)) {
+                if (app.walletAppKit().wallet().checkAESKey(aesKey)) {
                     WalletPasswordController.this.aesKey.set(aesKey);
                 } else {
                     log.warn("User entered incorrect password");
@@ -113,11 +125,11 @@ public class WalletPasswordController {
     // Writes the given time to the wallet as a tag so we can find it again in this class.
     public static void setTargetTime(Duration targetTime) {
         ByteString bytes = ByteString.copyFrom(Longs.toByteArray(targetTime.toMillis()));
-        Main.bitcoin.wallet().setTag(TAG, bytes);
+        WalletApplication.instance().walletAppKit().wallet().setTag(TAG, bytes);
     }
 
     // Reads target time or throws if not set yet (should never happen).
     public static Duration getTargetTime() throws IllegalArgumentException {
-        return Duration.ofMillis(Longs.fromByteArray(Main.bitcoin.wallet().getTag(TAG).toByteArray()));
+        return Duration.ofMillis(Longs.fromByteArray(WalletApplication.instance().walletAppKit().wallet().getTag(TAG).toByteArray()));
     }
 }

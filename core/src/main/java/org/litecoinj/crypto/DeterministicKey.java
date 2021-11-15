@@ -68,7 +68,7 @@ public class DeterministicKey extends ECKey {
                             LazyECPoint publicAsPoint,
                             @Nullable BigInteger priv,
                             @Nullable DeterministicKey parent) {
-        super(priv, compressPoint(checkNotNull(publicAsPoint)));
+        super(priv, publicAsPoint.compress());
         checkArgument(chainCode.length == 32);
         this.parent = parent;
         this.childNumberPath = HDPath.M(checkNotNull(childNumberPath));
@@ -139,7 +139,7 @@ public class DeterministicKey extends ECKey {
                             @Nullable DeterministicKey parent,
                             int depth,
                             int parentFingerprint) {
-        super(null, compressPoint(checkNotNull(publicAsPoint)));
+        super(null, publicAsPoint.compress());
         checkArgument(chainCode.length == 32);
         this.parent = parent;
         this.childNumberPath = HDPath.M(checkNotNull(childNumberPath));

@@ -75,7 +75,10 @@ public class Block extends Message {
      */
     public static final int MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE / 50;
 
-    /** A value for difficultyTarget (nBits) that allows half of all possible hash solutions. Used in unit testing. */
+    /** Standard maximum value for difficultyTarget (nBits) (Bitcoin MainNet and TestNet) */
+    public static final long STANDARD_MAX_DIFFICULTY_TARGET = 0x1d00ffffL;
+
+    /** A value for difficultyTarget (nBits) that allows (slightly less than) half of all possible hash solutions. Used in unit testing. */
     public static final long EASIEST_DIFFICULTY_TARGET = 0x207fFFFFL;
 
     /** Value to use if the block height is unknown */
@@ -125,15 +128,6 @@ public class Block extends Message {
         prevBlockHash = Sha256Hash.ZERO_HASH;
 
         length = HEADER_SIZE;
-    }
-
-    /**
-     * Constructs a block object from the Bitcoin wire format.
-     * @deprecated Use {@link BitcoinSerializer#makeBlock(byte[])} instead.
-     */
-    @Deprecated
-    public Block(NetworkParameters params, byte[] payloadBytes) throws ProtocolException {
-        super(params, payloadBytes, 0, params.getDefaultSerializer(), payloadBytes.length);
     }
 
     /**
@@ -230,8 +224,9 @@ public class Block extends Message {
             return;
         }
 
-        int numTransactions = (int) readVarInt();
-        optimalEncodingMessageSize += VarInt.sizeOf(numTransactions);
+        VarInt numTransactionsVarInt = readVarInt();
+        optimalEncodingMessageSize += numTransactionsVarInt.getSizeInBytes();
+        int numTransactions = numTransactionsVarInt.intValue();
         transactions = new ArrayList<>(Math.min(numTransactions, Utils.MAX_INITIAL_ARRAY_LENGTH));
         for (int i = 0; i < numTransactions; i++) {
             Transaction tx = new Transaction(params, payload, cursor, this, serializer, UNKNOWN_LENGTH, null);
@@ -261,7 +256,40 @@ public class Block extends Message {
         parseTransactions(offset + HEADER_SIZE);
         length = cursor - offset;
     }
-    
+
+    public static Block createGenesis(NetworkParameters n) {
+        Block genesisBlock = new Block(n, BLOCK_VERSION_GENESIS);
+        Transaction t = createGenesisTransaction(n, genesisTxInputScriptBytes, FIFTY_COINS, genesisTxScriptPubKeyBytes);
+        genesisBlock.addTransaction(t);
+        return genesisBlock;
+    }
+
+    private static Transaction createGenesisTransaction(NetworkParameters n, byte[] inputScriptBytes, Coin amount, byte[] scriptPubKeyBytes) {
+        Transaction t = new Transaction(n);
+        t.addInput(new TransactionInput(n, t, inputScriptBytes));
+        t.addOutput(new TransactionOutput(n, t, amount, scriptPubKeyBytes));
+        return t;
+    }
+
+    // A script containing the difficulty bits and the following message:
+    //
+    //   "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"
+    private static final byte[] genesisTxInputScriptBytes = Utils.HEX.decode
+                ("04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73");
+
+    private static final byte[] genesisTxScriptPubKeyBytes;
+    static {
+        ByteArrayOutputStream scriptPubKeyBytes = new ByteArrayOutputStream();
+        try {
+            Script.writeBytes(scriptPubKeyBytes, Utils.HEX.decode
+                    ("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f"));
+        } catch (IOException e) {
+            throw new RuntimeException(e); // Cannot happen.
+        }
+        scriptPubKeyBytes.write(ScriptOpCodes.OP_CHECKSIG);
+        genesisTxScriptPubKeyBytes = scriptPubKeyBytes.toByteArray();
+    }
+
     public int getOptimalEncodingMessageSize() {
         if (optimalEncodingMessageSize != 0)
             return optimalEncodingMessageSize;
@@ -467,23 +495,20 @@ public class Block extends Message {
         return LARGEST_HASH.divide(target.add(BigInteger.ONE));
     }
 
-    /** Returns a copy of the block, but without any transactions. */
+    /**
+     * Returns a copy of the block, but without any transactions.
+     * @return new, header-only {@code Block}
+     */
     public Block cloneAsHeader() {
-        Block block = new Block(params, BLOCK_VERSION_GENESIS);
-        copyBitcoinHeaderTo(block);
-        return block;
-    }
-
-    /** Copy the block without transactions into the provided empty block. */
-    protected final void copyBitcoinHeaderTo(final Block block) {
+        Block block = new Block(params, version);
+        block.difficultyTarget = difficultyTarget;
+        block.time = time;
         block.nonce = nonce;
         block.prevBlockHash = prevBlockHash;
         block.merkleRoot = getMerkleRoot();
-        block.version = version;
-        block.time = time;
-        block.difficultyTarget = difficultyTarget;
-        block.transactions = null;
         block.hash = getHash();
+        block.transactions = null;
+        return block;
         block.scryptHash = getScryptHash();
     }
 
@@ -524,6 +549,7 @@ public class Block extends Message {
      * <p>This can loop forever if a solution cannot be found solely by incrementing nonce. It doesn't change
      * extraNonce.</p>
      */
+    @VisibleForTesting
     public void solve() {
         while (true) {
             try {
@@ -799,6 +825,7 @@ public class Block extends Message {
     }
 
     /** Exists only for unit testing. */
+    @VisibleForTesting
     void setMerkleRoot(Sha256Hash value) {
         unCacheHeader();
         merkleRoot = value;
@@ -851,6 +878,7 @@ public class Block extends Message {
         return prevBlockHash;
     }
 
+    @VisibleForTesting
     void setPrevBlockHash(Sha256Hash prevBlockHash) {
         unCacheHeader();
         this.prevBlockHash = prevBlockHash;
@@ -873,6 +901,7 @@ public class Block extends Message {
         return new Date(getTimeSeconds()*1000);
     }
 
+    @VisibleForTesting
     public void setTime(long time) {
         unCacheHeader();
         this.time = time;
@@ -894,6 +923,7 @@ public class Block extends Message {
     }
 
     /** Sets the difficulty target in compact form. */
+    @VisibleForTesting
     public void setDifficultyTarget(long compactForm) {
         unCacheHeader();
         this.difficultyTarget = compactForm;
@@ -910,6 +940,7 @@ public class Block extends Message {
     }
 
     /** Sets the nonce and clears any cached data. */
+    @VisibleForTesting
     public void setNonce(long nonce) {
         unCacheHeader();
         this.nonce = nonce;
@@ -960,7 +991,7 @@ public class Block extends Message {
         adjustLength(transactions.size(), coinbase.length);
     }
 
-    static final byte[] EMPTY_BYTES = new byte[32];
+    private static final byte[] EMPTY_BYTES = new byte[32];
 
     // It's pretty weak to have this around at runtime: fix later.
     private static final byte[] pubkeyForTesting = new ECKey().getPubKey();
@@ -979,6 +1010,7 @@ public class Block extends Message {
      * 
      * @param height block height, if known, or -1 otherwise.
      */
+    @VisibleForTesting
     Block createNextBlock(@Nullable final Address to, final long version,
                           @Nullable TransactionOutPoint prevOut, final long time,
                           final byte[] pubKey, final Coin coinbaseValue,

@@ -17,6 +17,8 @@
 
 package org.litecoinj.tools;
 
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.TransactionOutput;
 import org.litecoinj.crypto.*;
 import org.litecoinj.params.MainNetParams;
 import org.litecoinj.params.RegTestParams;
@@ -31,6 +33,8 @@ import org.litecoinj.store.*;
 import org.litecoinj.uri.BitcoinURI;
 import org.litecoinj.uri.BitcoinURIParseException;
 import org.litecoinj.utils.BriefLogFormatter;
+import org.bitcoinj.wallet.CoinSelection;
+import org.bitcoinj.wallet.CoinSelector;
 import org.litecoinj.wallet.DeterministicKeyChain;
 import org.litecoinj.wallet.DeterministicSeed;
 
@@ -95,6 +99,7 @@ import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
@@ -152,6 +157,7 @@ public class WalletTool implements Callable<Integer> {
             "                         --payment-request=http://merchant.com/pay.php?123%n" +
             "                       Other options include:%n" +
             "                         --fee-per-vkb or --fee-sat-per-vbyte sets the network fee, see below%n" +
+            "                         --select-addr or --select-output to select specific outputs%n" +
             "                         --locktime=1234  sets the lock time to block 1234%n" +
             "                         --locktime=2013/01/01  sets the lock time to 1st Jan 2013%n" +
             "                         --allow-unconfirmed will let you create spends of pending non-change outputs.%n" +
@@ -206,6 +212,10 @@ public class WalletTool implements Callable<Integer> {
     private String peersStr;
     @CommandLine.Option(names = "--xpubkeys", description = "Specifies external public keys.")
     private String xpubKeysStr;
+    @CommandLine.Option(names = "--select-addr", description = "When sending, only pick coins from this address.")
+    private String selectAddrStr;
+    @CommandLine.Option(names = "--select-output", description = "When sending, only pick coins from this output.")
+    private String selectOutputStr;
     @CommandLine.Option(names = "--output", description = "Creates an output with the specified amount, separated by a colon. The special amount ALL is used to use the entire balance.")
     private List<String> outputsStr;
     @CommandLine.Option(names = "--fee-per-vkb", description = "Sets the network fee in Bitcoin per kilobyte when sending, e.g. --fee-per-vkb=0.0005")
@@ -454,7 +464,62 @@ public class WalletTool implements Callable<Integer> {
                         feePerVkb = parseCoin(feePerVkbStr);
                     if (feeSatPerVbyteStr != null)
                         feePerVkb = Coin.valueOf(Long.parseLong(feeSatPerVbyteStr) * 1000);
-                    send(outputsStr, feePerVkb, lockTimeStr, allowUnconfirmed);
+                    if (selectAddrStr != null && selectOutputStr != null) {
+                        System.err.println("--select-addr and --select-output cannot be used together.");
+                        return 1;
+                    }
+                    CoinSelector coinSelector = null;
+                    if (selectAddrStr != null) {
+                        Address selectAddr = null;
+                        try {
+                            selectAddr = Address.fromString(params, selectAddrStr);
+                        } catch (AddressFormatException x) {
+                            System.err.println("Could not parse given address, or wrong network: " + selectAddrStr);
+                            return 1;
+                        }
+                        final Address validSelectAddr = selectAddr;
+                        coinSelector = new CoinSelector() {
+                            @Override
+                            public CoinSelection select(Coin target, List<TransactionOutput> candidates) {
+                                Coin valueGathered = Coin.ZERO;
+                                List<TransactionOutput> gathered = new LinkedList<TransactionOutput>();
+                                for (TransactionOutput candidate : candidates) {
+                                    try {
+                                        Address candidateAddr = candidate.getScriptPubKey().getToAddress(params);
+                                        if (validSelectAddr.equals(candidateAddr)) {
+                                            gathered.add(candidate);
+                                            valueGathered = valueGathered.add(candidate.getValue());
+                                        }
+                                    } catch (ScriptException x) {
+                                        // swallow
+                                    }
+                                }
+                                return new CoinSelection(valueGathered, gathered);
+                            }
+                        };
+                    }
+                    if (selectOutputStr != null) {
+                        String[] parts = selectOutputStr.split(":", 2);
+                        Sha256Hash selectTransactionHash = Sha256Hash.wrap(parts[0]);
+                        int selectIndex = Integer.parseInt(parts[1]);
+                        coinSelector = new CoinSelector() {
+                            @Override
+                            public CoinSelection select(Coin target, List<TransactionOutput> candidates) {
+                                Coin valueGathered = Coin.ZERO;
+                                List<TransactionOutput> gathered = new LinkedList<TransactionOutput>();
+                                for (TransactionOutput candidate : candidates) {
+                                    int candicateIndex = candidate.getIndex();
+                                    final Sha256Hash candidateTransactionHash = candidate.getParentTransactionHash();
+                                    if (selectIndex == candicateIndex && selectTransactionHash.equals(candidateTransactionHash)) {
+                                        gathered.add(candidate);
+                                        valueGathered = valueGathered.add(candidate.getValue());
+                                    }
+                                }
+                                return new CoinSelection(valueGathered, gathered);
+                            }
+                        };
+                    }
+                    send(coinSelector, outputsStr, feePerVkb, lockTimeStr, allowUnconfirmed);
                 } else if (paymentRequestLocationStr != null) {
                     sendPaymentRequest(paymentRequestLocationStr, !noPki);
                 } else {
@@ -495,15 +560,19 @@ public class WalletTool implements Callable<Integer> {
         // less "raw" but we will just abort on any errors.
         try {
             Protos.Wallet.Builder builder = proto.toBuilder();
-            for (Protos.Transaction.Builder tx : builder.getTransactionBuilderList()) {
-                tx.setHash(bytesToHex(tx.getHash()));
-                for (int i = 0; i < tx.getBlockHashCount(); i++)
-                    tx.setBlockHash(i, bytesToHex(tx.getBlockHash(i)));
-                for (Protos.TransactionInput.Builder input : tx.getTransactionInputBuilderList())
-                    input.setTransactionOutPointHash(bytesToHex(input.getTransactionOutPointHash()));
-                for (Protos.TransactionOutput.Builder output : tx.getTransactionOutputBuilderList()) {
-                    if (output.hasSpentByTransactionHash())
-                        output.setSpentByTransactionHash(bytesToHex(output.getSpentByTransactionHash()));
+            for (Protos.Transaction tx : builder.getTransactionList()) {
+                Protos.Transaction.Builder txBuilder = tx.toBuilder();
+                txBuilder.setHash(bytesToHex(txBuilder.getHash()));
+                for (int i = 0; i < txBuilder.getBlockHashCount(); i++)
+                    txBuilder.setBlockHash(i, bytesToHex(txBuilder.getBlockHash(i)));
+                for (Protos.TransactionInput input : txBuilder.getTransactionInputList()) {
+                    Protos.TransactionInput.Builder inputBuilder = input.toBuilder();
+                    inputBuilder.setTransactionOutPointHash(bytesToHex(inputBuilder.getTransactionOutPointHash()));
+                }
+                for (Protos.TransactionOutput output : txBuilder.getTransactionOutputList()) {
+                    Protos.TransactionOutput.Builder outputBuilder = output.toBuilder();
+                    if (outputBuilder.hasSpentByTransactionHash())
+                        outputBuilder.setSpentByTransactionHash(bytesToHex(outputBuilder.getSpentByTransactionHash()));
                 }
                 // TODO: keys, ip addresses etc.
             }
@@ -618,47 +687,56 @@ public class WalletTool implements Callable<Integer> {
         }
     }
 
-    private void send(List<String> outputs, Coin feePerVkb, String lockTimeStr, boolean allowUnconfirmed) throws VerificationException {
+    private void send(CoinSelector coinSelector, List<String> outputs, Coin feePerVkb, String lockTimeStr,
+                      boolean allowUnconfirmed)
+            throws VerificationException {
+        Coin balance = coinSelector != null ? wallet.getBalance(coinSelector) : wallet.getBalance(allowUnconfirmed ?
+                BalanceType.ESTIMATED : BalanceType.AVAILABLE);
+        // Convert the input strings to outputs.
+        Transaction t = new Transaction(params);
+        for (String spec : outputs) {
+            try {
+                OutputSpec outputSpec = new OutputSpec(spec);
+                Coin value = outputSpec.value != null ? outputSpec.value : balance;
+                if (outputSpec.isAddress())
+                    t.addOutput(value, outputSpec.addr);
+                else
+                    t.addOutput(value, outputSpec.key);
+            } catch (AddressFormatException.WrongNetwork e) {
+                System.err.println("Malformed output specification, address is for a different network: " + spec);
+                return;
+            } catch (AddressFormatException e) {
+                System.err.println("Malformed output specification, could not parse as address: " + spec);
+                return;
+            } catch (NumberFormatException e) {
+                System.err.println("Malformed output specification, could not parse as value: " + spec);
+                return;
+            } catch (IllegalArgumentException e) {
+                System.err.println(e.getMessage());
+                return;
+            }
+        }
+        SendRequest req = SendRequest.forTx(t);
+        if (coinSelector != null) {
+            req.coinSelector = coinSelector;
+            req.recipientsPayFees = true;
+        }
+        if (t.getOutputs().size() == 1 && t.getOutput(0).getValue().equals(balance)) {
+            log.info("Emptying out wallet, recipient may get less than what you expect");
+            req.emptyWallet = true;
+        }
+        if (feePerVkb != null)
+            req.setFeePerVkb(feePerVkb);
+        if (allowUnconfirmed) {
+            req.allowUnconfirmed();
+        }
+        if (password != null) {
+            req.aesKey = passwordToKey(true);
+            if (req.aesKey == null)
+                return;  // Error message already printed.
+        }
+
         try {
-            // Convert the input strings to outputs.
-            Transaction t = new Transaction(params);
-            for (String spec : outputs) {
-                try {
-                    OutputSpec outputSpec = new OutputSpec(spec);
-                    if (outputSpec.isAddress()) {
-                        t.addOutput(outputSpec.value, outputSpec.addr);
-                    } else {
-                        t.addOutput(outputSpec.value, outputSpec.key);
-                    }
-                } catch (AddressFormatException.WrongNetwork e) {
-                    System.err.println("Malformed output specification, address is for a different network: " + spec);
-                    return;
-                } catch (AddressFormatException e) {
-                    System.err.println("Malformed output specification, could not parse as address: " + spec);
-                    return;
-                } catch (NumberFormatException e) {
-                    System.err.println("Malformed output specification, could not parse as value: " + spec);
-                    return;
-                } catch (IllegalArgumentException e) {
-                    System.err.println(e.getMessage());
-                    return;
-                }
-            }
-            SendRequest req = SendRequest.forTx(t);
-            if (t.getOutputs().size() == 1 && t.getOutput(0).getValue().equals(wallet.getBalance())) {
-                log.info("Emptying out wallet, recipient may get less than what you expect");
-                req.emptyWallet = true;
-            }
-            if (feePerVkb != null)
-                req.setFeePerVkb(feePerVkb);
-            if (allowUnconfirmed) {
-                req.allowUnconfirmed();
-            }
-            if (password != null) {
-                req.aesKey = passwordToKey(true);
-                if (req.aesKey == null)
-                    return;  // Error message already printed.
-            }
             wallet.completeTx(req);
 
             try {
@@ -695,7 +773,7 @@ public class WalletTool implements Callable<Integer> {
         } catch (BlockStoreException | ExecutionException | InterruptedException | KeyCrypterException e) {
             throw new RuntimeException(e);
         } catch (InsufficientMoneyException e) {
-            System.err.println("Insufficient funds: have " + wallet.getBalance().toFriendlyString());
+            System.err.println("Insufficient funds: have " + balance.toFriendlyString());
         }
     }
 
@@ -711,7 +789,7 @@ public class WalletTool implements Callable<Integer> {
             }
             String destination = parts[0];
             if ("ALL".equalsIgnoreCase(parts[1]))
-                value = wallet.getBalance(BalanceType.ESTIMATED);
+                value = null;
             else
                 value = parseCoin(parts[1]);
             if (destination.startsWith("0")) {
@@ -800,21 +878,22 @@ public class WalletTool implements Callable<Integer> {
     }
 
     private void send(PaymentSession session) {
+        System.out.println("Payment Request");
+        System.out.println("Coin: " + session.getValue().toFriendlyString());
+        System.out.println("Date: " + session.getDate());
+        System.out.println("Memo: " + session.getMemo());
+        if (session.pkiVerificationData != null) {
+            System.out.println("Pki-Verified Name: " + session.pkiVerificationData.displayName);
+            System.out.println("PKI data verified by: " + session.pkiVerificationData.rootAuthorityName);
+        }
+        final SendRequest req = session.getSendRequest();
+        if (password != null) {
+            req.aesKey = passwordToKey(true);
+            if (req.aesKey == null)
+                return;   // Error message already printed.
+        }
+
         try {
-            System.out.println("Payment Request");
-            System.out.println("Coin: " + session.getValue().toFriendlyString());
-            System.out.println("Date: " + session.getDate());
-            System.out.println("Memo: " + session.getMemo());
-            if (session.pkiVerificationData != null) {
-                System.out.println("Pki-Verified Name: " + session.pkiVerificationData.displayName);
-                System.out.println("PKI data verified by: " + session.pkiVerificationData.rootAuthorityName);
-            }
-            final SendRequest req = session.getSendRequest();
-            if (password != null) {
-                req.aesKey = passwordToKey(true);
-                if (req.aesKey == null)
-                    return;   // Error message already printed.
-            }
             wallet.completeTx(req);  // may throw InsufficientMoneyException.
             if (offline) {
                 wallet.commitTx(req.tx);

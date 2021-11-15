@@ -157,6 +157,7 @@ public class Peer extends PeerSocketHandler {
     private static final int PING_MOVING_AVERAGE_WINDOW = 20;
 
     private volatile VersionMessage vPeerVersionMessage;
+    private volatile Coin vFeeFilter;
 
     // A settable future which completes (with this) when the connection is open
     private final SettableFuture<Peer> connectionOpenFuture = SettableFuture.create();
@@ -442,7 +443,7 @@ public class Peer extends PeerSocketHandler {
         }
 
         // No further communication is possible until version handshake is complete.
-        if (!(m instanceof VersionMessage || m instanceof VersionAck
+        if (!(m instanceof VersionMessage || m instanceof VersionAck || m instanceof SendAddrV2Message
                 || (versionHandshakeFuture.isDone() && !versionHandshakeFuture.isCancelled())))
             throw new ProtocolException(
                     "Received " + m.getClass().getSimpleName() + " before version handshake is complete.");
@@ -482,6 +483,8 @@ public class Peer extends PeerSocketHandler {
             log.error("{} {}: Received {}", this, getPeerVersionMessage().subVer, m);
         } else if (m instanceof SendHeadersMessage) {
             // We ignore this message, because we don't announce new blocks.
+        } else if (m instanceof FeeFilterMessage) {
+            processFeeFilter((FeeFilterMessage) m);
         } else {
             log.warn("{}: Received unhandled message: {}", this, m);
         }
@@ -538,6 +541,8 @@ public class Peer extends PeerSocketHandler {
             // In this case, it's a protocol violation.
             throw new ProtocolException("Peer reports invalid best height: " + peerVersionMessage.bestHeight);
         // Now it's our turn ...
+        // Send a sendaddrv2 message, indicating that we prefer to receive addrv2 messages.
+        sendMessage(new SendAddrV2Message(params));
         // Send an ACK message stating we accept the peers protocol version.
         sendMessage(new VersionAck());
         if (log.isDebugEnabled())
@@ -1585,6 +1590,11 @@ public class Peer extends PeerSocketHandler {
         }
     }
 
+    private void processFeeFilter(FeeFilterMessage m) {
+        log.info("{}: Announced fee filter: {}/kB", this, m.getFeeRate().toFriendlyString());
+        vFeeFilter = m.getFeeRate();
+    }
+
     /**
      * Returns the difference between our best chain height and the peers, which can either be positive if we are
      * behind the peer, or negative if the peer is ahead of us.
@@ -1624,6 +1634,11 @@ public class Peer extends PeerSocketHandler {
     /** Returns version data announced by the remote peer. */
     public VersionMessage getPeerVersionMessage() {
         return vPeerVersionMessage;
+    }
+
+    /** Returns the fee filter announced by the remote peer, interpreted as satoshis per kB. */
+    public Coin getFeeFilter() {
+        return vFeeFilter;
     }
 
     /** Returns version data we announce to our remote peers. */

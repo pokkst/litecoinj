@@ -8,7 +8,7 @@ The litecoinj library is a Java implementation of the Bitcoin protocol, which al
 
 ### Technologies
 
-* Java 7+ and Gradle 4.4+ for the `core` module
+* Java 8+ (needs Java 8 API or Android 6.0 API, compiles to Java 8 bytecode) and Gradle 4.4+ for the `core` module
 * Java 8+ and Gradle 4.4+ for `tools` and `examples`
 * Java 11+ and Gradle 4.10+ for the JavaFX-based `wallettemplate`
 * [Gradle](https://gradle.org/) - for building the project
@@ -54,6 +54,8 @@ You can now run the `wallet-tool` without parameters to get help on its operatio
 To create a test net wallet file in `~/litecoinj/litecoinj-test.wallet`, you would use:
 ```
 mkdir ~/litecoinj
+```
+```
 ./tools/build/install/wallet-tool/bin/wallet-tool --net=TEST --wallet=$HOME/litecoinj/litecoinj-test.wallet create
 ```
 

@@ -23,19 +23,21 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import org.litecoinj.crypto.*;
 import org.litecoinj.wallet.*;
+import org.bitcoinj.walletfx.application.WalletApplication;
+import org.bitcoinj.walletfx.overlay.OverlayController;
+import org.bitcoinj.walletfx.overlay.OverlayableStackPaneController;
 import org.slf4j.*;
 import org.bouncycastle.crypto.params.*;
 
 import com.google.protobuf.ByteString;
 
-import wallettemplate.utils.*;
-
 import java.time.Duration;
 import java.util.concurrent.*;
 
-import static wallettemplate.utils.GuiUtils.*;
+import org.bitcoinj.walletfx.utils.KeyDerivationTasks;
+import static org.bitcoinj.walletfx.utils.GuiUtils.*;
 
-public class WalletSetPasswordController {
+public class WalletSetPasswordController implements OverlayController<WalletSetPasswordController> {
     private static final Logger log = LoggerFactory.getLogger(WalletSetPasswordController.class);
     public PasswordField pass1, pass2;
 
@@ -44,7 +46,9 @@ public class WalletSetPasswordController {
     public Button closeButton;
     public Label explanationLabel;
 
-    public Main.OverlayUI overlayUI;
+    private WalletApplication app;
+    private OverlayableStackPaneController rootController;
+    private OverlayableStackPaneController.OverlayUI<? extends OverlayController<WalletSetPasswordController>> overlayUI;
     // These params were determined empirically on a top-range (as of 2014) MacBook Pro with native scrypt support,
     // using the scryptenc command line tool from the original scrypt distribution, given a memory limit of 40mb.
     public static final Protos.ScryptParameters SCRYPT_PARAMETERS = Protos.ScryptParameters.newBuilder()
@@ -54,30 +58,46 @@ public class WalletSetPasswordController {
             .setSalt(ByteString.copyFrom(KeyCrypterScrypt.randomSalt()))
             .build();
 
+    @Override
+    public void initOverlay(OverlayableStackPaneController overlayableStackPaneController, OverlayableStackPaneController.OverlayUI<? extends OverlayController<WalletSetPasswordController>> ui) {
+        rootController = overlayableStackPaneController;
+        overlayUI = ui;
+    }
+
     public void initialize() {
+        app = WalletApplication.instance();
         progressMeter.setOpacity(0);
     }
 
-    public static Duration estimatedKeyDerivationTime = null;
+    private static Duration estimatedKeyDerivationTime = null;
 
-    public static CompletableFuture<Duration> estimateKeyDerivationTimeMsec() {
-        // This is run in the background after startup. If we haven't recorded it before, do a key derivation to see
-        // how long it takes. This helps us produce better progress feedback, as on Windows we don't currently have a
-        // native Scrypt impl and the Java version is ~3 times slower, plus it depends a lot on CPU speed.
-        CompletableFuture<Duration> future = new CompletableFuture<>();
-        new Thread(() -> {
-            log.info("Doing background test key derivation");
-            KeyCrypterScrypt scrypt = new KeyCrypterScrypt(SCRYPT_PARAMETERS);
-            long start = System.currentTimeMillis();
-            scrypt.deriveKey("test password");
-            long msec = System.currentTimeMillis() - start;
-            log.info("Background test key derivation took {}msec", msec);
-            Platform.runLater(() -> {
-                estimatedKeyDerivationTime = Duration.ofMillis(msec);
-                future.complete(estimatedKeyDerivationTime);
-            });
-        }).start();
-        return future;
+    /**
+     * Initialize the {@code estimatedKeyDerivationTime} static field if not already initialized
+     * <p>
+     * This is run in the background after startup. If we haven't recorded it before, do a key derivation to see
+     * how long it takes. This helps us produce better progress feedback, as on Windows we don't currently have a
+     * native Scrypt impl and the Java version is ~3 times slower, plus it depends a lot on CPU speed.
+     */
+    public static void initEstimatedKeyDerivationTime() {
+        if (estimatedKeyDerivationTime == null) {
+            CompletableFuture
+                .supplyAsync(WalletSetPasswordController::estimateKeyDerivationTime)
+                .thenAccept(duration -> estimatedKeyDerivationTime = duration);
+        }
+    }
+
+    /**
+     * Estimate key derivation time with no side effects
+     * @return duration in milliseconds
+     */
+    private static Duration estimateKeyDerivationTime() {
+        log.info("Doing background test key derivation");
+        KeyCrypterScrypt scrypt = new KeyCrypterScrypt(SCRYPT_PARAMETERS);
+        long start = System.currentTimeMillis();
+        scrypt.deriveKey("test password");
+        long msec = System.currentTimeMillis() - start;
+        log.info("Background test key derivation took {}msec", msec);
+        return Duration.ofMillis(msec);
     }
 
     @FXML
@@ -109,7 +129,7 @@ public class WalletSetPasswordController {
                 WalletPasswordController.setTargetTime(Duration.ofMillis(timeTakenMsec));
                 // The actual encryption part doesn't take very long as most private keys are derived on demand.
                 log.info("Key derived, now encrypting");
-                Main.bitcoin.wallet().encrypt(scrypt, aesKey);
+                app.walletAppKit().wallet().encrypt(scrypt, aesKey);
                 log.info("Encryption done");
                 informationalAlert("Wallet encrypted",
                         "You can remove the password at any time from the settings screen.");

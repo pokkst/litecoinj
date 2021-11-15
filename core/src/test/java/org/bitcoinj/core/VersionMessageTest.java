@@ -68,7 +68,7 @@ public class VersionMessageTest {
     }
 
     @Test
-    public void roundTrip_ipv4_currentProtocolVersion() throws Exception {
+    public void roundTrip_ipv4() throws Exception {
         VersionMessage ver = new VersionMessage(UNITTEST, 1234);
         ver.time = 23456;
         ver.subVer = "/litecoinj/";
@@ -92,24 +92,7 @@ public class VersionMessageTest {
     }
 
     @Test
-    public void roundTrip_ipv4_ancientProtocolVersion() throws Exception {
-        VersionMessage ver = new VersionMessage(UNITTEST, 0);
-        ver.time = 23456;
-        ver.clientVersion = 0;
-        ver.localServices = 1;
-        ver.receivingAddr = new PeerAddress(UNITTEST, InetAddress.getByName("4.3.2.1"), 8333);
-        ver.receivingAddr.setParent(ver);
-        byte[] serialized = ver.bitcoinSerialize();
-        VersionMessage ver2 = new VersionMessage(UNITTEST, serialized);
-        assertEquals(23456, ver2.time);
-        assertEquals(0, ver2.clientVersion);
-        assertEquals(1, ver2.localServices);
-        assertEquals("4.3.2.1", ver2.receivingAddr.getAddr().getHostAddress());
-        assertEquals(8333, ver2.receivingAddr.getPort());
-    }
-
-    @Test
-    public void roundTrip_ipv6_currentProtocolVersion() throws Exception {
+    public void roundTrip_ipv6() throws Exception {
         VersionMessage ver = new VersionMessage(UNITTEST, 1234);
         ver.time = 23456;
         ver.subVer = "/litecoinj/";

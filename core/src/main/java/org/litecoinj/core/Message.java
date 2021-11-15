@@ -65,23 +65,18 @@ public abstract class Message {
         this.serializer = params.getDefaultSerializer();
     }
 
-    protected Message(NetworkParameters params, byte[] payload, int offset, int protocolVersion) throws ProtocolException {
-        this(params, payload, offset, protocolVersion, params.getDefaultSerializer(), UNKNOWN_LENGTH);
-    }
-
     /**
      * 
      * @param params NetworkParameters object.
      * @param payload Bitcoin protocol formatted byte array containing message content.
      * @param offset The location of the first payload byte within the array.
-     * @param protocolVersion Bitcoin protocol version.
      * @param serializer the serializer to use for this message.
      * @param length The length of message payload if known.  Usually this is provided when deserializing of the wire
      * as the length will be provided as part of the header.  If unknown then set to Message.UNKNOWN_LENGTH
      * @throws ProtocolException
      */
-    protected Message(NetworkParameters params, byte[] payload, int offset, int protocolVersion, MessageSerializer serializer, int length) throws ProtocolException {
-        this.serializer = serializer.withProtocolVersion(protocolVersion);
+    protected Message(NetworkParameters params, byte[] payload, int offset, MessageSerializer serializer, int length) throws ProtocolException {
+        this.serializer = serializer;
         this.params = params;
         this.payload = payload;
         this.cursor = this.offset = offset;
@@ -89,7 +84,7 @@ public abstract class Message {
 
         parse();
 
-        if (this.length == UNKNOWN_LENGTH)
+        if (this.length == UNKNOWN_LENGTH && !(this instanceof UnknownMessage))
             checkState(false, "Length field has not been set in constructor for %s after parse.",
                        getClass().getSimpleName());
         
@@ -98,12 +93,7 @@ public abstract class Message {
     }
 
     protected Message(NetworkParameters params, byte[] payload, int offset) throws ProtocolException {
-        this(params, payload, offset, params.getDefaultSerializer().getProtocolVersion(),
-             params.getDefaultSerializer(), UNKNOWN_LENGTH);
-    }
-
-    protected Message(NetworkParameters params, byte[] payload, int offset, MessageSerializer serializer, int length) throws ProtocolException {
-        this(params, payload, offset, serializer.getProtocolVersion(), serializer, length);
+        this(params, payload, offset, params.getDefaultSerializer(), UNKNOWN_LENGTH);
     }
 
     // These methods handle the serialization/deserialization using the custom Bitcoin protocol.
@@ -301,15 +291,15 @@ public abstract class Message {
         return new BigInteger(Utils.reverseBytes(readBytes(8)));
     }
 
-    protected long readVarInt() throws ProtocolException {
+    protected VarInt readVarInt() throws ProtocolException {
         return readVarInt(0);
     }
 
-    protected long readVarInt(int offset) throws ProtocolException {
+    protected VarInt readVarInt(int offset) throws ProtocolException {
         try {
             VarInt varint = new VarInt(payload, cursor + offset);
             cursor += offset + varint.getOriginalSizeInBytes();
-            return varint.value;
+            return varint;
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ProtocolException(e);
         }
@@ -339,13 +329,13 @@ public abstract class Message {
     }
 
     protected byte[] readByteArray() throws ProtocolException {
-        long len = readVarInt();
-        return readBytes((int)len);
+        final int length = readVarInt().intValue();
+        return readBytes(length);
     }
 
     protected String readStr() throws ProtocolException {
-        long length = readVarInt();
-        return length == 0 ? "" : new String(readBytes((int) length), StandardCharsets.UTF_8); // optimization for empty strings
+        int length = readVarInt().intValue();
+        return length == 0 ? "" : new String(readBytes(length), StandardCharsets.UTF_8); // optimization for empty strings
     }
 
     protected Sha256Hash readHash() throws ProtocolException {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package wallettemplate.utils;
+package org.bitcoinj.walletfx.utils;
 
 import org.litecoinj.core.Address;
 import org.litecoinj.core.Coin;

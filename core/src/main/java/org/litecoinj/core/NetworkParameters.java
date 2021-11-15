@@ -17,9 +17,6 @@
 
 package org.litecoinj.core;
 
-import org.litecoinj.core.Block;
-import org.litecoinj.core.StoredBlock;
-import org.litecoinj.core.VerificationException;
 import org.litecoinj.net.discovery.*;
 import org.litecoinj.params.*;
 import org.litecoinj.script.*;
@@ -29,7 +26,6 @@ import org.litecoinj.store.BlockStoreException;
 import org.litecoinj.utils.MonetaryFormat;
 
 import javax.annotation.*;
-import java.io.*;
 import java.math.*;
 import java.util.*;
 
@@ -64,7 +60,6 @@ public abstract class NetworkParameters {
 
     // TODO: Seed nodes should be here as well.
 
-    protected final Block genesisBlock;
     protected BigInteger maxTarget;
     protected int port;
     protected long packetMagic;  // Indicates message origin network and is used to seek to the next message when stream state is unknown.
@@ -260,9 +255,7 @@ public abstract class NetworkParameters {
      * and a message in the coinbase transaction. It says, <i>"The Times 03/Jan/2009 Chancellor on brink of second
      * bailout for banks"</i>.</p>
      */
-    public Block getGenesisBlock() {
-        return genesisBlock;
-    }
+    public abstract Block getGenesisBlock();
 
     /** Default TCP port on which to connect to nodes. */
     public int getPort() {
@@ -497,7 +490,8 @@ public abstract class NetworkParameters {
         BLOOM_FILTER(70000), // BIP37
         BLOOM_FILTER_BIP111(70011), // BIP111
         WITNESS_VERSION(70012),
-        CURRENT(70012);
+        FEEFILTER(70013), // BIP133
+        CURRENT(70013);
 
         private final int bitcoinProtocol;
 

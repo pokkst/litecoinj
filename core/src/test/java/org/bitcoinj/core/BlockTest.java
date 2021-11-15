@@ -73,7 +73,6 @@ public class BlockTest {
         block700000.verify(Block.BLOCK_HEIGHT_GENESIS, EnumSet.noneOf(Block.VerifyFlag.class));
     }
     
-    @SuppressWarnings("deprecation")
     @Test
     public void testDate() throws Exception {
         assertEquals("2016-02-13T22:59:39Z", Utils.dateTimeFormat(block700000.getTime()));
@@ -354,5 +353,14 @@ public class BlockTest {
         } catch (ProtocolException e) {
             //Expected, do nothing
         }
+    }
+
+    @Test
+    public void testGenesisBlock() {
+        Block genesisBlock = Block.createGenesis(MainNetParams.get());
+        genesisBlock.setDifficultyTarget(0x1d00ffffL);
+        genesisBlock.setTime(1231006505L);
+        genesisBlock.setNonce(2083236893);
+        assertEquals(Sha256Hash.wrap("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"), genesisBlock.getHash());
     }
 }

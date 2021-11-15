@@ -60,7 +60,8 @@ public class Script {
         P2SH(3), // pay to script hash
         P2WPKH(4), // pay to witness pubkey hash
         P2WSH(5), // pay to witness script hash
-        P2SH_P2WPKH(6);
+        P2TR(6), // pay to taproot
+        P2SH_P2WPKH(7);
 
         public final int id;
 
@@ -284,6 +285,8 @@ public class Script {
             return LegacyAddress.fromKey(params, ECKey.fromPublicOnly(ScriptPattern.extractKeyFromP2PK(this)), ScriptType.P2PKH);
         else if (ScriptPattern.isP2WH(this))
             return SegwitAddress.fromHash(params, ScriptPattern.extractHashFromP2WH(this));
+        else if (ScriptPattern.isP2TR(this))
+            return SegwitAddress.fromProgram(params, 1, ScriptPattern.extractOutputKeyFromP2TR(this));
         else
             throw new ScriptException(ScriptError.SCRIPT_ERR_UNKNOWN_ERROR, "Cannot cast this script to an address");
     }
@@ -1549,6 +1552,36 @@ public class Script {
             boolean validSig = pubkey.verify(sigHash, signature);
             if (!validSig)
                 throw new ScriptException(ScriptError.SCRIPT_ERR_CHECKSIGVERIFY, "Invalid signature");
+        } else if (ScriptPattern.isP2PKH(scriptPubKey)) {
+            if (chunks.size() != 2)
+                throw new ScriptException(ScriptError.SCRIPT_ERR_SCRIPT_SIZE, "Invalid size: " + chunks.size());
+            TransactionSignature signature;
+            try {
+                signature = TransactionSignature.decodeFromBitcoin(chunks.get(0).data, true, true);
+            } catch (SignatureDecodeException x) {
+                throw new ScriptException(ScriptError.SCRIPT_ERR_SIG_DER, "Cannot decode", x);
+            }
+            ECKey pubkey = ECKey.fromPublicOnly(chunks.get(1).data);
+            Sha256Hash sigHash = txContainingThis.hashForSignature(scriptSigIndex, scriptPubKey,
+                    signature.sigHashMode(), false);
+            boolean validSig = pubkey.verify(sigHash, signature);
+            if (!validSig)
+                throw new ScriptException(ScriptError.SCRIPT_ERR_CHECKSIGVERIFY, "Invalid signature");
+        } else if (ScriptPattern.isP2PK(scriptPubKey)) {
+            if (chunks.size() != 1)
+                throw new ScriptException(ScriptError.SCRIPT_ERR_SCRIPT_SIZE, "Invalid size: " + chunks.size());
+            TransactionSignature signature;
+            try {
+                signature = TransactionSignature.decodeFromBitcoin(chunks.get(0).data, false, false);
+            } catch (SignatureDecodeException x) {
+                throw new ScriptException(ScriptError.SCRIPT_ERR_SIG_DER, "Cannot decode", x);
+            }
+            ECKey pubkey = ECKey.fromPublicOnly(ScriptPattern.extractKeyFromP2PK(scriptPubKey));
+            Sha256Hash sigHash = txContainingThis.hashForSignature(scriptSigIndex, scriptPubKey,
+                    signature.sigHashMode(), false);
+            boolean validSig = pubkey.verify(sigHash, signature);
+            if (!validSig)
+                throw new ScriptException(ScriptError.SCRIPT_ERR_CHECKSIGVERIFY, "Invalid signature");
         } else {
             correctlySpends(txContainingThis, scriptSigIndex, scriptPubKey, verifyFlags);
         }
@@ -1647,6 +1680,8 @@ public class Script {
             return ScriptType.P2WPKH;
         if (ScriptPattern.isP2WSH(this))
             return ScriptType.P2WSH;
+        if (ScriptPattern.isP2TR(this))
+            return ScriptType.P2TR;
         return null;
     }
 

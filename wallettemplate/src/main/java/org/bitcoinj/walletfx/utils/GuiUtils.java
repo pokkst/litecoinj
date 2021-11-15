@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package wallettemplate.utils;
+package org.bitcoinj.walletfx.utils;
 
 import com.google.common.base.Throwables;
 import javafx.animation.*;
@@ -27,14 +27,13 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import wallettemplate.MainController;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.function.BiConsumer;
 
 import static com.google.common.base.Preconditions.checkState;
-import static wallettemplate.utils.WTUtils.unchecked;
+import static org.bitcoinj.walletfx.utils.WTUtils.unchecked;
 
 public class GuiUtils {
     public static void runAlert(BiConsumer<Stage, AlertWindowController> setup) {
@@ -172,11 +171,11 @@ public class GuiUtils {
      * A useful helper for development purposes. Used as a switch for loading files from local disk, allowing live
      * editing whilst the app runs without rebuilds.
      */
-    public static URL getResource(String name) {
+    public static URL getResource(Class<?> clazz, String name) {
         if (false)
             return unchecked(() -> new URL("file:///your/path/here/src/main/wallettemplate/" + name));
         else
-            return MainController.class.getResource(name);
+            return clazz.getResource(name);
     }
 
     public static void checkGuiThread() {
