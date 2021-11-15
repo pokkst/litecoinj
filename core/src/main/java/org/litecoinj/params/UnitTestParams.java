@@ -18,7 +18,9 @@
 package org.litecoinj.params;
 
 import org.litecoinj.core.Block;
-import org.bitcoinj.core.Utils;
+import org.litecoinj.core.Utils;
+
+import java.math.BigInteger;
 
 /**
  * Network parameters used by the litecoinj unit tests (and potentially your own). This lets you solve a block using
@@ -44,9 +46,6 @@ public class UnitTestParams extends AbstractBitcoinNetParams {
         addressHeader = 111;
         p2shHeader = 196;
         maxTarget = new BigInteger("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16);
-        genesisBlock.setTime(Utils.currentTimeSeconds());
-        genesisBlock.setDifficultyTarget(Block.EASIEST_DIFFICULTY_TARGET);
-        genesisBlock.solve();
         port = 18333;
         interval = 10;
         dumpedPrivateKeyHeader = 239;

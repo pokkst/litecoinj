@@ -17,7 +17,7 @@
 
 package org.litecoinj.core;
 
-import org.bitcoinj.params.AbstractBitcoinNetParams;
+import org.litecoinj.params.AbstractBitcoinNetParams;
 import org.litecoinj.script.Script;
 import org.litecoinj.script.Script.VerifyFlag;
 import org.litecoinj.script.ScriptPattern;

@@ -18,28 +18,22 @@
 package org.litecoinj.params;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.litecoinj.core.Coin.FIFTY_COINS;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
-import org.litecoinj.core.Block;
-import org.litecoinj.core.Coin;
-import org.litecoinj.core.NetworkParameters;
-import org.litecoinj.core.Sha256Hash;
-import org.litecoinj.core.StoredBlock;
-import org.litecoinj.core.Transaction;
-import org.litecoinj.core.TransactionOutput;
-import org.litecoinj.core.Utils;
+import org.litecoinj.core.*;
+import org.litecoinj.script.Script;
+import org.litecoinj.script.ScriptOpCodes;
 import org.litecoinj.utils.MonetaryFormat;
-import org.litecoinj.core.VerificationException;
 import org.litecoinj.store.BlockStore;
 import org.litecoinj.store.BlockStoreException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Stopwatch;
-
-import org.litecoinj.core.BitcoinSerializer;
 
 /**
  * Parameters for Bitcoin-like networks.

@@ -30,18 +30,18 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import org.bitcoinj.walletfx.application.WalletApplication;
-import org.bitcoinj.walletfx.overlay.OverlayController;
-import org.bitcoinj.walletfx.overlay.OverlayableStackPaneController;
+import org.litecoinj.walletfx.application.WalletApplication;
+import org.litecoinj.walletfx.overlay.OverlayController;
+import org.litecoinj.walletfx.overlay.OverlayableStackPaneController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bouncycastle.crypto.params.KeyParameter;
-import org.bitcoinj.walletfx.utils.KeyDerivationTasks;
+import org.litecoinj.walletfx.utils.KeyDerivationTasks;
 
 import java.time.Duration;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.bitcoinj.walletfx.utils.GuiUtils.*;
+import static org.litecoinj.walletfx.utils.GuiUtils.*;
 
 /**
  * User interface for entering a password on demand, e.g. to send money. Also used when encrypting a wallet. Shows a

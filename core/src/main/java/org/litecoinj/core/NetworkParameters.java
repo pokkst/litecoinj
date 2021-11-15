@@ -26,6 +26,7 @@ import org.litecoinj.store.BlockStoreException;
 import org.litecoinj.utils.MonetaryFormat;
 
 import javax.annotation.*;
+import java.io.ByteArrayOutputStream;
 import java.math.*;
 import java.util.*;
 
@@ -99,30 +100,6 @@ public abstract class NetworkParameters {
     protected HttpDiscovery.Details[] httpSeeds = {};
     protected Map<Integer, Sha256Hash> checkpoints = new HashMap<>();
     protected volatile transient MessageSerializer defaultSerializer = null;
-
-    protected NetworkParameters() {
-        genesisBlock = createGenesis(this);
-    }
-
-    private static Block createGenesis(NetworkParameters n) {
-        Block genesisBlock = new Block(n, Block.BLOCK_VERSION_GENESIS);
-        Transaction t = new Transaction(n);
-        try {
-            byte[] bytes = Utils.HEX.decode
-                    ("04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536");
-            t.addInput(new TransactionInput(n, t, bytes));
-            ByteArrayOutputStream scriptPubKeyBytes = new ByteArrayOutputStream();
-            Script.writeBytes(scriptPubKeyBytes, Utils.HEX.decode
-                    ("040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9"));
-            scriptPubKeyBytes.write(ScriptOpCodes.OP_CHECKSIG);
-            t.addOutput(new TransactionOutput(n, t, FIFTY_COINS, scriptPubKeyBytes.toByteArray()));
-        } catch (Exception e) {
-            // Cannot happen.
-            throw new RuntimeException(e);
-        }
-        genesisBlock.addTransaction(t);
-        return genesisBlock;
-    }
 
     public static final int TARGET_TIMESPAN = (int)(3.5 * 24 * 60 * 60);  // 3.5 days difficulty cycle, on average.
     public static final int TARGET_SPACING = (int)(2.5 * 60);  // 2.5 minutes per block.

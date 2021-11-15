@@ -31,6 +31,7 @@ public class MainNetParams extends AbstractBitcoinNetParams {
     public static final int MAINNET_MAJORITY_WINDOW = 1000;
     public static final int MAINNET_MAJORITY_REJECT_BLOCK_OUTDATED = 950;
     public static final int MAINNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = 750;
+    private static final Sha256Hash GENESIS_HASH = Sha256Hash.wrap("12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe2");
 
     public MainNetParams() {
         super();
@@ -54,16 +55,9 @@ public class MainNetParams extends AbstractBitcoinNetParams {
         majorityRejectBlockOutdated = MAINNET_MAJORITY_REJECT_BLOCK_OUTDATED;
         majorityWindow = MAINNET_MAJORITY_WINDOW;
 
-        genesisBlock.setDifficultyTarget(0x1e0ffff0L);
-        genesisBlock.setTime(1317972665L);
-        genesisBlock.setNonce(2084524493L);
         id = ID_MAINNET;
         subsidyDecreaseBlockCount = 840000;
         spendableCoinbaseDepth = 100;
-        String genesisHash = genesisBlock.getHashAsString();
-        checkState(genesisHash.equals("12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe2"),
-                genesisHash);
-
         // This contains (at a minimum) the blocks which are not BIP30 compliant. BIP30 changed how duplicate
         // transactions are handled. Duplicated transactions could occur in the case where a coinbase had the same
         // extraNonce and the same outputs but appeared at different heights, and greatly complicated re-org handling.
@@ -107,5 +101,19 @@ public class MainNetParams extends AbstractBitcoinNetParams {
     @Override
     public String getPaymentProtocolId() {
         return PAYMENT_PROTOCOL_ID_MAINNET;
+    }
+
+    @Override
+    public Block getGenesisBlock() {
+        synchronized (GENESIS_HASH) {
+            if (genesisBlock == null) {
+                genesisBlock = Block.createGenesis(this);
+                genesisBlock.setDifficultyTarget(0x1e0ffff0L);
+                genesisBlock.setTime(1317972665L);
+                genesisBlock.setNonce(2084524493L);
+                checkState(genesisBlock.getHash().equals(GENESIS_HASH), "Invalid genesis hash");
+            }
+        }
+        return genesisBlock;
     }
 }

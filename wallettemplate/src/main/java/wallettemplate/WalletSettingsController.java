@@ -28,13 +28,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
-import org.bitcoinj.walletfx.application.WalletApplication;
-import org.bitcoinj.walletfx.overlay.OverlayController;
-import org.bitcoinj.walletfx.overlay.OverlayableStackPaneController;
+import org.litecoinj.walletfx.application.WalletApplication;
+import org.litecoinj.walletfx.overlay.OverlayController;
+import org.litecoinj.walletfx.overlay.OverlayableStackPaneController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bouncycastle.crypto.params.KeyParameter;
-import org.bitcoinj.walletfx.utils.TextFieldValidator;
+import org.litecoinj.walletfx.utils.TextFieldValidator;
 
 import javax.annotation.Nullable;
 import java.time.Instant;
@@ -45,10 +45,10 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static javafx.beans.binding.Bindings.*;
-import static org.bitcoinj.walletfx.utils.GuiUtils.checkGuiThread;
-import static org.bitcoinj.walletfx.utils.GuiUtils.informationalAlert;
-import static org.bitcoinj.walletfx.utils.WTUtils.didThrow;
-import static org.bitcoinj.walletfx.utils.WTUtils.unchecked;
+import static org.litecoinj.walletfx.utils.GuiUtils.checkGuiThread;
+import static org.litecoinj.walletfx.utils.GuiUtils.informationalAlert;
+import static org.litecoinj.walletfx.utils.WTUtils.didThrow;
+import static org.litecoinj.walletfx.utils.WTUtils.unchecked;
 
 public class WalletSettingsController implements OverlayController<WalletSettingsController> {
     private static final Logger log = LoggerFactory.getLogger(WalletSettingsController.class);

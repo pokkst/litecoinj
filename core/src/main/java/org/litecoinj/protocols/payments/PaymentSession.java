@@ -29,7 +29,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import org.bitcoin.protocols.payments.Protos;
+import org.litecoin.protocols.payments.Protos;
 
 import javax.annotation.Nullable;
 

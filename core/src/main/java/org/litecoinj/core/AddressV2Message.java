@@ -1,6 +1,5 @@
 /*
- * Copyright 2011 Google Inc.
- * Copyright 2014 Andreas Schildbach
+ * Copyright by the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +19,18 @@ package org.litecoinj.core;
 import java.util.ArrayList;
 
 /**
- * <p>Represents an "addr" message on the P2P network, which contains broadcast IP addresses of other peers. This is
+ * <p>Represents an "addrv2" message on the P2P network, which contains broadcast IP addresses of other peers. This is
  * one of the ways peers can find each other without using the DNS or IRC discovery mechanisms. However storing and
- * using addr messages is not presently implemented.</p>
+ * using addrv2 messages is not presently implemented.</p>
+ *
+ * <p>See <a href="https://github.com/bitcoin/bips/blob/master/bip-0155.mediawiki">BIP155</a> for details.</p>
  *
  * <p>Instances of this class are not safe for use by multiple threads.</p>
  */
-public class AddressV1Message extends AddressMessage {
+public class AddressV2Message extends AddressMessage {
 
     /**
-     * Construct a new 'addr' message.
+     * Construct a new 'addrv2' message.
      * @param params NetworkParameters object.
      * @param offset The location of the first payload byte within the array.
      * @param serializer the serializer to use for this block.
@@ -37,27 +38,23 @@ public class AddressV1Message extends AddressMessage {
      * as the length will be provided as part of the header.  If unknown then set to Message.UNKNOWN_LENGTH
      * @throws ProtocolException
      */
-    AddressV1Message(NetworkParameters params, byte[] payload, int offset, MessageSerializer serializer, int length) throws ProtocolException {
+    AddressV2Message(NetworkParameters params, byte[] payload, int offset, MessageSerializer serializer, int length) throws ProtocolException {
         super(params, payload, offset, serializer, length);
     }
 
     /**
-     * Construct a new 'addr' message.
+     * Construct a new 'addrv2' message.
      * @param params NetworkParameters object.
      * @param serializer the serializer to use for this block.
      * @param length The length of message if known.  Usually this is provided when deserializing of the wire
      * as the length will be provided as part of the header.  If unknown then set to Message.UNKNOWN_LENGTH
      * @throws ProtocolException
      */
-    AddressV1Message(NetworkParameters params, byte[] payload, MessageSerializer serializer, int length) throws ProtocolException {
+    AddressV2Message(NetworkParameters params, byte[] payload, MessageSerializer serializer, int length) throws ProtocolException {
         super(params, payload, 0, serializer, length);
     }
 
-    AddressV1Message(NetworkParameters params, byte[] payload, int offset) throws ProtocolException {
-        super(params, payload, offset, params.getDefaultSerializer(), UNKNOWN_LENGTH);
-    }
-
-    AddressV1Message(NetworkParameters params, byte[] payload) throws ProtocolException {
+    AddressV2Message(NetworkParameters params, byte[] payload) throws ProtocolException {
         super(params, payload, 0, params.getDefaultSerializer(), UNKNOWN_LENGTH);
     }
 
@@ -69,7 +66,7 @@ public class AddressV1Message extends AddressMessage {
         if (numAddresses > MAX_ADDRESSES)
             throw new ProtocolException("Address message too large.");
         addresses = new ArrayList<>(numAddresses);
-        MessageSerializer serializer = this.serializer.withProtocolVersion(1);
+        MessageSerializer serializer = this.serializer.withProtocolVersion(2);
         length = numAddressesVarInt.getSizeInBytes();
         for (int i = 0; i < numAddresses; i++) {
             PeerAddress addr = new PeerAddress(params, payload, cursor, this, serializer);
@@ -81,7 +78,7 @@ public class AddressV1Message extends AddressMessage {
 
     public void addAddress(PeerAddress address) {
         int protocolVersion = address.serializer.getProtocolVersion();
-        if (protocolVersion != 1)
+        if (protocolVersion != 2)
             throw new IllegalStateException("invalid protocolVersion: " + protocolVersion);
 
         unCache();
@@ -92,6 +89,6 @@ public class AddressV1Message extends AddressMessage {
 
     @Override
     public String toString() {
-        return "addr: " + Utils.SPACE_JOINER.join(addresses);
+        return "addrv2: " + Utils.SPACE_JOINER.join(addresses);
     }
 }

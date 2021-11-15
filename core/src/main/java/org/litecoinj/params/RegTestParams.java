@@ -18,8 +18,8 @@
 package org.litecoinj.params;
 
 import org.litecoinj.core.Block;
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.Utils;
+import org.litecoinj.core.Sha256Hash;
+import org.litecoinj.core.Utils;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -34,7 +34,7 @@ public class RegTestParams extends AbstractBitcoinNetParams {
     public RegTestParams() {
         super();
         interval = Integer.MAX_VALUE;
-        maxTarget = MAX_TARGET;
+        maxTarget = Utils.decodeCompactBits(Block.EASIEST_DIFFICULTY_TARGET);
         subsidyDecreaseBlockCount = 150;
         port = 18444;
         id = ID_REGTEST;

@@ -19,6 +19,7 @@ package wallettemplate;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.litecoinj.core.NetworkParameters;
+import org.litecoinj.params.MainNetParams;
 import org.litecoinj.params.TestNet3Params;
 import org.litecoinj.script.Script;
 import org.litecoinj.walletfx.application.AppDelegate;
@@ -28,8 +29,8 @@ import org.litecoinj.walletfx.application.AppDelegate;
  * to {@link WalletTemplate}
  */
 public class Main extends Application {
-    private static final NetworkParameters params = TestNet3Params.get();
-    private static final Script.ScriptType PREFERRED_OUTPUT_SCRIPT_TYPE = Script.ScriptType.P2WPKH;
+    private static final NetworkParameters params = MainNetParams.get();
+    private static final Script.ScriptType PREFERRED_OUTPUT_SCRIPT_TYPE = Script.ScriptType.P2SH_P2WPKH;
     private static final String APP_NAME = "WalletTemplate";
 
     private final AppDelegate delegate;

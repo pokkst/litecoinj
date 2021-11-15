@@ -21,12 +21,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.util.Date;
 
-import org.litecoinj.core.Block;
-import org.litecoinj.core.ECKey;
-import org.litecoinj.core.NetworkParameters;
-import org.litecoinj.core.StoredBlock;
-import org.litecoinj.core.Utils;
-import org.litecoinj.core.VerificationException;
+import org.litecoinj.core.*;
 import org.litecoinj.net.discovery.HttpDiscovery;
 import org.litecoinj.store.BlockStore;
 import org.litecoinj.store.BlockStoreException;
@@ -41,6 +36,7 @@ public class TestNet3Params extends AbstractBitcoinNetParams {
     public static final int TESTNET_MAJORITY_WINDOW = 100;
     public static final int TESTNET_MAJORITY_REJECT_BLOCK_OUTDATED = 75;
     public static final int TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = 51;
+    private static final Sha256Hash GENESIS_HASH = Sha256Hash.wrap("4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0");
 
     public TestNet3Params() {
         super();
@@ -54,14 +50,8 @@ public class TestNet3Params extends AbstractBitcoinNetParams {
         p2shHeader2 = 58;
         dumpedPrivateKeyHeader = 239;
         segwitAddressHrp = "tltc";
-        genesisBlock.setTime(1486949366L);
-        genesisBlock.setDifficultyTarget(0x1e0ffff0L);
-        genesisBlock.setNonce(293345L);
         subsidyDecreaseBlockCount = 840000;
         spendableCoinbaseDepth = 100;
-        String genesisHash = genesisBlock.getHashAsString();
-        checkState(genesisHash.equals("4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0"));
-
         dnsSeeds = new String[] {
                 "testnet-seed.litecointools.com",
                 "seed-b.litecoin.loshan.co.uk",
@@ -127,5 +117,19 @@ public class TestNet3Params extends AbstractBitcoinNetParams {
         } else {
             super.checkDifficultyTransitions(storedPrev, nextBlock, blockStore);
         }
+    }
+
+    @Override
+    public Block getGenesisBlock() {
+        synchronized (GENESIS_HASH) {
+            if (genesisBlock == null) {
+                genesisBlock = Block.createGenesis(this);
+                genesisBlock.setDifficultyTarget(0x1e0ffff0L);
+                genesisBlock.setTime(1486949366L);
+                genesisBlock.setNonce(293345L);
+                checkState(genesisBlock.getHash().equals(GENESIS_HASH), "Invalid genesis hash");
+            }
+        }
+        return genesisBlock;
     }
 }
