@@ -55,7 +55,7 @@ public enum BitcoinNetwork implements Network {
     /**
      * The maximum number of coins to be generated
      */
-    private static final long MAX_COINS = 21_000_000;
+    private static final long MAX_COINS = 84_000_000;
 
     /**
      * The maximum money to be generated
@@ -140,7 +140,12 @@ public enum BitcoinNetwork implements Network {
      * @see LegacyAddress.P2SHHeader
      */
     public int legacyP2SHHeader() {
-        return LegacyAddress.P2SHHeader.ofNetwork(this).headerByte();
+        return this == MAINNET ? LegacyAddress.P2SHHeader.X5.headerByte() : LegacyAddress.P2SHHeader.X196.headerByte();
+    }
+
+    @Override
+    public int legacyP2SHHeader2() {
+        return this == MAINNET ? LegacyAddress.P2SHHeader.X50.headerByte() : LegacyAddress.P2SHHeader.X58.headerByte();
     }
 
     /**

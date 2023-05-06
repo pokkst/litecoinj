@@ -36,7 +36,8 @@ public enum ScriptType {
     P2SH("sh", 3),      // pay to script hash
     P2WPKH("wpkh", 4),  // pay to witness pubkey hash
     P2WSH("wsh", 5),    // pay to witness script hash
-    P2TR("tr", 6);      // pay to taproot
+    P2TR("tr", 6),      // pay to taproot
+    P2SH_P2WPKH("p2sh-p2wpkh", 6);
 
     private final String scriptIdentifierString;
 

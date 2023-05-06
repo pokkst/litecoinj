@@ -70,8 +70,6 @@ public abstract class NetworkParameters {
     protected BigInteger maxTarget;
     protected int port;
     protected int packetMagic;  // Indicates message origin network and is used to seek to the next message when stream state is unknown.
-    protected int addressHeader;
-    protected int p2shHeader;
     protected int dumpedPrivateKeyHeader;
     protected String segwitAddressHrp;
     protected int interval;
@@ -80,6 +78,8 @@ public abstract class NetworkParameters {
     protected int bip32HeaderP2PKHpriv;
     protected int bip32HeaderP2WPKHpub;
     protected int bip32HeaderP2WPKHpriv;
+    protected int bip32HeaderP2SHP2WPKHpub;
+    protected int bip32HeaderP2SHP2WPKHpriv;
 
     /** Used to check majorities for block version upgrade */
     protected int majorityEnforceBlockUpgrade;
@@ -108,8 +108,8 @@ public abstract class NetworkParameters {
         this.id = network.id();
     }
 
-    public static final int TARGET_TIMESPAN = 14 * 24 * 60 * 60;  // 2 weeks per difficulty cycle, on average.
-    public static final int TARGET_SPACING = 10 * 60;  // 10 minutes per block.
+    public static final int TARGET_TIMESPAN = (int)(3.5 * 24 * 60 * 60);  // 3.5 days difficulty cycle, on average.
+    public static final int TARGET_SPACING = (int)(2.5 * 60);  // 2.5 minutes per block.
     public static final int INTERVAL = TARGET_TIMESPAN / TARGET_SPACING;
     
     /**
@@ -305,24 +305,6 @@ public abstract class NetworkParameters {
     }
 
     /**
-     * First byte of a base58 encoded address. See {@link LegacyAddress}.
-     * @return the header value
-     */
-    @Deprecated
-    public int getAddressHeader() {
-        return addressHeader;
-    }
-
-    /**
-     * First byte of a base58 encoded P2SH address.  P2SH addresses are defined as part of BIP0013.
-     * @return the header value
-     */
-    @Deprecated
-    public int getP2SHHeader() {
-        return p2shHeader;
-    }
-
-    /**
      * First byte of a base58 encoded dumped private key. See {@link DumpedPrivateKey}.
      * @return the header value
      */
@@ -405,6 +387,17 @@ public abstract class NetworkParameters {
     public int getBip32HeaderP2WPKHpriv() {
         return bip32HeaderP2WPKHpriv;
     }
+
+    /** Returns the 4 byte header for BIP32 wallet P2SH-P2WPKH - public key part. */
+    public int getBip32HeaderP2SHP2WPKHpub() {
+        return bip32HeaderP2SHP2WPKHpub;
+    }
+
+    /** Returns the 4 byte header for BIP32 wallet P2SH-P2WPKH - private key part. */
+    public int getBip32HeaderP2SHP2WPKHpriv() {
+        return bip32HeaderP2SHP2WPKHpriv;
+    }
+
     /**
      * Returns the number of coins that will be produced in total, on this
      * network. Where not applicable, a very large number of coins is returned

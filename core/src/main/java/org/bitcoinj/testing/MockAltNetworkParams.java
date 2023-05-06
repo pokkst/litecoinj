@@ -34,8 +34,6 @@ public class MockAltNetworkParams extends NetworkParameters {
 
     public MockAltNetworkParams() {
         super(new MockAltNetwork());
-        addressHeader = 48;
-        p2shHeader = 5;
     }
 
     @Override

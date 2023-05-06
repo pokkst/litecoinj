@@ -133,6 +133,7 @@ public class Block extends BaseMessage {
 
     /** Stores the hash of the block. If null, getHash() will recalculate it. */
     private Sha256Hash hash;
+    private Sha256Hash scryptHash;
 
     /**
      * Deserialize this message from a given payload.
@@ -151,13 +152,20 @@ public class Block extends BaseMessage {
         long difficultyTarget = ByteUtils.readUint32(payload);
         long nonce = ByteUtils.readUint32(payload);
         payload.reset(); // read again from the mark for the hash
-        Sha256Hash hash = Sha256Hash.wrapReversed(Sha256Hash.hashTwice(Buffers.readBytes(payload, HEADER_SIZE)));
+        byte[] header = Buffers.readBytes(payload, HEADER_SIZE);
+        Sha256Hash hash = Sha256Hash.wrapReversed(Sha256Hash.hashTwice(header));
+        byte[] scryptDigest = ByteUtils.scryptDigest(header);
+        if(scryptDigest == null) {
+            throw new RuntimeException("Scrypt digest is null.");
+        }
+        Sha256Hash scryptHash = Sha256Hash.wrap(ByteUtils.reverseBytes(scryptDigest));
         // transactions
         List<Transaction> transactions = payload.hasRemaining() ? // otherwise this message is just a header
                 readTransactions(payload) :
                 null;
         Block block = new Block(version, prevBlockHash, merkleRoot, time, difficultyTarget, nonce, transactions);
         block.hash = hash;
+        block.scryptHash = scryptHash;
         return block;
     }
 
@@ -242,14 +250,14 @@ public class Block extends BaseMessage {
     //
     //   "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"
     private static final byte[] genesisTxInputScriptBytes = ByteUtils.parseHex
-                ("04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73");
+                ("04ffff001d0104404e592054696d65732030352f4f63742f32303131205374657665204a6f62732c204170706c65e280997320566973696f6e6172792c2044696573206174203536");
 
     private static final byte[] genesisTxScriptPubKeyBytes;
     static {
         ByteArrayOutputStream scriptPubKeyBytes = new ByteArrayOutputStream();
         try {
             Script.writeBytes(scriptPubKeyBytes, ByteUtils.parseHex
-                    ("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f"));
+                    ("040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9"));
         } catch (IOException e) {
             throw new RuntimeException(e); // Cannot happen.
         }
@@ -307,6 +315,7 @@ public class Block extends BaseMessage {
 
     private void unCacheHeader() {
         hash = null;
+        scryptHash = null;
     }
 
     private void unCacheTransactions() {
@@ -322,11 +331,29 @@ public class Block extends BaseMessage {
      * Calculates the block hash by serializing the block and hashing the
      * resulting bytes.
      */
+    /**
+     * Calculates the block hash by serializing the block and hashing the
+     * resulting bytes.
+     */
     private Sha256Hash calculateHash() {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream(HEADER_SIZE);
             writeHeader(bos);
             return Sha256Hash.wrapReversed(Sha256Hash.hashTwice(bos.toByteArray()));
+        } catch (IOException e) {
+            throw new RuntimeException(e); // Cannot happen.
+        }
+    }
+
+    private Sha256Hash calculateScryptHash() {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream(HEADER_SIZE);
+            writeHeader(bos);
+            byte[] scryptDigest = ByteUtils.scryptDigest(bos.toByteArray());
+            if(scryptDigest == null) {
+                throw new RuntimeException("Scrypt digest is null.");
+            }
+            return Sha256Hash.wrap(ByteUtils.reverseBytes(scryptDigest));
         } catch (IOException e) {
             throw new RuntimeException(e); // Cannot happen.
         }
@@ -341,6 +368,10 @@ public class Block extends BaseMessage {
         return getHash().toString();
     }
 
+    public String getScryptHashAsString() {
+        return getScryptHash().toString();
+    }
+
     /**
      * Returns the hash of the block (which for a valid, solved block should be
      * below the target). Big endian.
@@ -349,6 +380,12 @@ public class Block extends BaseMessage {
         if (hash == null)
             hash = calculateHash();
         return hash;
+    }
+
+    public Sha256Hash getScryptHash() {
+        if (scryptHash == null)
+            scryptHash = calculateScryptHash();
+        return scryptHash;
     }
 
     /**
@@ -383,6 +420,7 @@ public class Block extends BaseMessage {
         block.merkleRoot = getMerkleRoot();
         block.hash = getHash();
         block.transactions = null;
+        block.scryptHash = getScryptHash();
         return block;
     }
 
@@ -456,10 +494,6 @@ public class Block extends BaseMessage {
 
     /** Returns true if the hash of the block is OK (lower than difficulty target). */
     protected boolean checkProofOfWork(boolean throwException) throws VerificationException {
-        // shortcut for unit-testing
-        if (Context.get().isRelaxProofOfWork())
-            return true;
-
         // This part is key - it is what proves the block was as difficult to make as it claims
         // to be. Note however that in the context of this function, the block can claim to be
         // as difficult as it wants to be .... if somebody was able to take control of our network
@@ -470,11 +504,11 @@ public class Block extends BaseMessage {
         // field is of the right value. This requires us to have the preceding blocks.
         BigInteger target = getDifficultyTargetAsInteger();
 
-        BigInteger h = getHash().toBigInteger();
+        BigInteger h = getScryptHash().toBigInteger();
         if (h.compareTo(target) > 0) {
             // Proof of work check failed!
             if (throwException)
-                throw new VerificationException("Hash is higher than target: " + getHashAsString() + " vs "
+                throw new VerificationException("Hash is higher than target: " + getScryptHashAsString() + " vs "
                         + target.toString(16));
             else
                 return false;
@@ -659,6 +693,7 @@ public class Block extends BaseMessage {
         unCacheHeader();
         merkleRoot = value;
         hash = null;
+        scryptHash = null;
     }
 
     /**
@@ -689,6 +724,7 @@ public class Block extends BaseMessage {
         // Force a recalculation next time the values are needed.
         merkleRoot = null;
         hash = null;
+        scryptHash = null;
     }
 
     /** Returns the version of the block data structure as defined by the Bitcoin protocol. */
@@ -708,6 +744,7 @@ public class Block extends BaseMessage {
         unCacheHeader();
         this.prevBlockHash = prevBlockHash;
         this.hash = null;
+        this.scryptHash = null;
     }
 
     /**
@@ -741,6 +778,7 @@ public class Block extends BaseMessage {
         unCacheHeader();
         this.time = time.truncatedTo(ChronoUnit.SECONDS); // convert to Bitcoin time
         this.hash = null;
+        this.scryptHash = null;
     }
 
     /**
@@ -762,6 +800,7 @@ public class Block extends BaseMessage {
         unCacheHeader();
         this.difficultyTarget = compactForm;
         this.hash = null;
+        this.scryptHash = null;
     }
 
     /**
@@ -778,6 +817,7 @@ public class Block extends BaseMessage {
         unCacheHeader();
         this.nonce = nonce;
         this.hash = null;
+        this.scryptHash = null;
     }
 
     /** Returns an unmodifiable list of transactions held in this block, or null if this object represents just a header. */

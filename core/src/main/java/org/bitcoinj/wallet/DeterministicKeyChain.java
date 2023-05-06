@@ -141,7 +141,10 @@ public class DeterministicKeyChain implements EncryptableKeyChain {
     public static final HDPath ACCOUNT_ONE_PATH = HDPath.M(ChildNumber.ONE_HARDENED);
     // m / 44' / 0' / 0'
     public static final HDPath BIP44_ACCOUNT_ZERO_PATH = HDPath.M(new ChildNumber(44, true))
-                        .extend(ChildNumber.ZERO_HARDENED, ChildNumber.ZERO_HARDENED);
+                        .extend(new ChildNumber(2, true), ChildNumber.ZERO_HARDENED);
+    // m / 49' / 2' / 0'
+    public static final HDPath BIP49_ACCOUNT_ZERO_PATH = HDPath.M(new ChildNumber(49, true))
+            .extend(new ChildNumber(2, true), ChildNumber.ZERO_HARDENED);
     public static final HDPath EXTERNAL_SUBPATH = HDPath.M(ChildNumber.ZERO);
     public static final HDPath INTERNAL_SUBPATH = HDPath.M(ChildNumber.ONE);
 
@@ -383,8 +386,8 @@ public class DeterministicKeyChain implements EncryptableKeyChain {
      */
     protected DeterministicKeyChain(DeterministicSeed seed, @Nullable KeyCrypter crypter,
                                     ScriptType outputScriptType, List<ChildNumber> accountPath) {
-        checkArgument(outputScriptType == null || outputScriptType == ScriptType.P2PKH || outputScriptType == ScriptType.P2WPKH, () ->
-                "only P2PKH or P2WPKH allowed");
+        checkArgument(outputScriptType == null || outputScriptType == ScriptType.P2PKH || outputScriptType == ScriptType.P2WPKH || outputScriptType == ScriptType.P2SH_P2WPKH, () ->
+                "only P2PKH, P2WPKH, or P2SH-P2WPKH allowed");
         this.outputScriptType = outputScriptType != null ? outputScriptType : ScriptType.P2PKH;
         this.accountPath = HDPath.M(accountPath);
         this.seed = seed;
@@ -452,6 +455,10 @@ public class DeterministicKeyChain implements EncryptableKeyChain {
         for (ListenerRegistration<KeyChainEventListener> listener : chain.basicKeyChain.getListeners()) {
             basicKeyChain.addEventListener(listener);
         }
+    }
+
+    public boolean isNestedSegwit() {
+        return false;
     }
 
     public HDPath getAccountPath() {

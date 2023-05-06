@@ -80,6 +80,8 @@ public interface KeyChainGroupStructure {
             return DeterministicKeyChain.ACCOUNT_ZERO_PATH;
         else if (outputScriptType == ScriptType.P2WPKH)
             return DeterministicKeyChain.ACCOUNT_ONE_PATH;
+        else if(outputScriptType == ScriptType.P2SH_P2WPKH)
+            return DeterministicKeyChain.BIP49_ACCOUNT_ZERO_PATH;
         else
             throw new IllegalArgumentException(outputScriptType.toString());
     };
@@ -108,6 +110,8 @@ public interface KeyChainGroupStructure {
             return HDPath.BIP44_PARENT;
         } else if (scriptType == ScriptType.P2WPKH) {
             return HDPath.BIP84_PARENT;
+        } else if (scriptType == ScriptType.P2SH_P2WPKH) {
+            return HDPath.BIP49_PARENT;
         } else {
             throw new IllegalArgumentException(scriptType.toString());
         }
@@ -123,7 +127,7 @@ public interface KeyChainGroupStructure {
         }
         switch ((BitcoinNetwork) network) {
             case MAINNET:
-                return ChildNumber.COINTYPE_BTC;
+                return ChildNumber.COINTYPE_LTC;
             case TESTNET:
                 return ChildNumber.COINTYPE_TBTC;
             case REGTEST:

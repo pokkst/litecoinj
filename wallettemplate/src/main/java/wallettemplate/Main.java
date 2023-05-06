@@ -27,8 +27,8 @@ import org.bitcoinj.walletfx.application.AppDelegate;
  * to {@link WalletTemplate}
  */
 public class Main extends Application {
-    private static final BitcoinNetwork network = BitcoinNetwork.TESTNET;
-    private static final ScriptType PREFERRED_OUTPUT_SCRIPT_TYPE = ScriptType.P2WPKH;
+    private static final BitcoinNetwork network = BitcoinNetwork.MAINNET;
+    private static final ScriptType PREFERRED_OUTPUT_SCRIPT_TYPE = ScriptType.P2SH_P2WPKH;
     private static final String APP_NAME = "WalletTemplate";
 
     private final AppDelegate delegate;

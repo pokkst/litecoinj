@@ -35,6 +35,9 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.base.VarInt;
 import org.bitcoinj.crypto.internal.CryptoUtils;
 import org.bitcoinj.crypto.utils.MessageVerifyUtils;
+import org.bitcoinj.script.Script;
+import org.bitcoinj.script.ScriptBuilder;
+import org.bitcoinj.script.ScriptPattern;
 import org.bitcoinj.wallet.Protos;
 import org.bitcoinj.wallet.Wallet;
 import org.bouncycastle.asn1.ASN1InputStream;
@@ -429,6 +432,11 @@ public class ECKey implements EncryptableItem {
             checkArgument(this.isCompressed(), () ->
                     "only compressed keys allowed");
             return SegwitAddress.fromHash(network, this.getPubKeyHash());
+        } else if(scriptType == ScriptType.P2SH_P2WPKH) {
+            checkArgument(this.isCompressed(), () ->
+                    "only compressed keys allowed");
+            Script script = ScriptBuilder.createP2SHP2WPKHOutputScript(this);
+            return LegacyAddress.fromScriptHash(network, ScriptPattern.extractHashFromP2SH(script));
         } else {
             throw new IllegalArgumentException(scriptType.toString());
         }

@@ -91,6 +91,7 @@ public class SendMoneyController implements OverlayController<SendMoneyControlle
             // Don't make the user wait for confirmations for now, as the intention is they're sending it
             // their own money!
             req.allowUnconfirmed();
+            req.feePerKb = Coin.valueOf(1000);
             sendResult = app.walletAppKit().wallet().sendCoins(req);
             sendResult.awaitRelayed().whenComplete((result, t) -> {
                 if (t == null) {

@@ -120,15 +120,15 @@ public class BuildCheckpoints implements Callable<Integer> {
         } else if (networkHasDnsSeeds) {
             // use a peer group discovered with dns
             peerGroup.setUserAgent("PeerMonitor", "1.0");
-            peerGroup.setMaxConnections(20);
+            peerGroup.setMaxConnections(4);
             peerGroup.addPeerDiscovery(new DnsDiscovery(params));
             peerGroup.start();
 
             // Connect to at least 4 peers because some may not support download
-            Future<List<Peer>> future = peerGroup.waitForPeers(4);
+            Future<List<Peer>> future = peerGroup.waitForPeers(2);
             System.out.println("Connecting to " + params.getId() + ", timeout 20 seconds...");
             // throw timeout exception if we can't get peers
-            future.get(20, SECONDS);
+            future.get(60, SECONDS);
         } else {
             // try localhost
             ipAddress = InetAddress.getLocalHost();
@@ -150,6 +150,10 @@ public class BuildCheckpoints implements Callable<Integer> {
                 System.out.println(String.format("Checkpointing block %s at height %d, time %s",
                         block.getHeader().getHash(), block.getHeight(),
                         TimeUtils.dateTimeFormat(block.getHeader().time())));
+                checkpoints.put(height, block);
+            } else if ((height+1) % params.getInterval() == 0 && timeAgo.isAfter(block.getHeader().time())) {
+                System.out.println(String.format("Checkpointing block %s at height %d, time %s",
+                        block.getHeader().getHash(), block.getHeight(), TimeUtils.dateTimeFormat(block.getHeader().time())));
                 checkpoints.put(height, block);
             }
         });

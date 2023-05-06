@@ -506,6 +506,8 @@ public class DeterministicKey extends ECKey {
             ser.putInt(pub ? params.getBip32HeaderP2PKHpub() : params.getBip32HeaderP2PKHpriv());
         else if (outputScriptType == ScriptType.P2WPKH)
             ser.putInt(pub ? params.getBip32HeaderP2WPKHpub() : params.getBip32HeaderP2WPKHpriv());
+        else if (outputScriptType == ScriptType.P2SH_P2WPKH)
+            ser.putInt(pub ? params.getBip32HeaderP2SHP2WPKHpub() : params.getBip32HeaderP2SHP2WPKHpriv());
         else
             throw new IllegalStateException(outputScriptType.toString());
         ser.put((byte) getDepth());

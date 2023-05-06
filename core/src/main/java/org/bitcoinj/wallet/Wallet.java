@@ -613,6 +613,8 @@ public class Wallet extends BaseTaggableObject
             return ScriptType.P2PKH;
         else if (header == params.getBip32HeaderP2WPKHpub() || header == params.getBip32HeaderP2WPKHpriv())
             return ScriptType.P2WPKH;
+        else if (header == params.getBip32HeaderP2SHP2WPKHpub() || header == params.getBip32HeaderP2SHP2WPKHpriv())
+            return ScriptType.P2SH_P2WPKH;
         else
             throw new IllegalArgumentException(base58.substring(0, 4));
     }
@@ -1382,7 +1384,7 @@ public class Wallet extends BaseTaggableObject
      */
     public ECKey findKeyFromAddress(Address address) {
         final ScriptType scriptType = address.getOutputScriptType();
-        if (scriptType == ScriptType.P2PKH || scriptType == ScriptType.P2WPKH)
+        if (scriptType == ScriptType.P2PKH || scriptType == ScriptType.P2WPKH || scriptType == ScriptType.P2SH_P2WPKH)
             return findKeyFromPubKeyHash(address.getHash(), scriptType);
         else
             return null;
@@ -4569,6 +4571,7 @@ public class Wallet extends BaseTaggableObject
             // we don't have the keys for.
             List<TransactionOutput> candidates = calculateAllSpendCandidates(true, req.missingSigsMode == MissingSigsMode.THROW);
 
+            System.out.println(candidates);
             CoinSelection bestCoinSelection;
             TransactionOutput bestChangeOutput = null;
             List<Coin> updatedOutputValues = null;
@@ -4684,7 +4687,11 @@ public class Wallet extends BaseTaggableObject
                 RedeemData redeemData = txIn.getConnectedRedeemData(maybeDecryptingKeyBag);
                 Objects.requireNonNull(redeemData, () ->
                         "Transaction exists in wallet that we cannot redeem: " + txIn.getOutpoint().hash());
-                txIn.setScriptSig(scriptPubKey.createEmptyInputScript(redeemData.keys.get(0), redeemData.redeemScript));
+                if(ScriptPattern.isP2SH(scriptPubKey) && ScriptPattern.isP2WPKH(redeemData.redeemScript)) {
+                    txIn.setScriptSig(ScriptBuilder.createEmpty());
+                } else {
+                    txIn.setScriptSig(scriptPubKey.createEmptyInputScript(redeemData.keys.get(0), redeemData.redeemScript));
+                }
             }
 
             TransactionSigner.ProposedTransaction proposal = new TransactionSigner.ProposedTransaction(tx);
@@ -5501,8 +5508,13 @@ public class Wallet extends BaseTaggableObject
                             RoundingMode.CEILING); // round up
                 } else if (ScriptPattern.isP2SH(script)) {
                     redeemScript = findRedeemDataFromScriptHash(ScriptPattern.extractHashFromP2SH(script)).redeemScript;
-                    Objects.requireNonNull(redeemScript, "Coin selection includes unspendable outputs");
-                    vsize += script.getNumberOfBytesRequiredToSpend(key, redeemScript);
+                    if(ScriptPattern.isP2WPKH(redeemScript)) {
+                        Objects.requireNonNull(redeemScript, "Coin selection includes unspendable outputs");
+                        vsize += redeemScript.getNumberOfBytesRequiredToSpend(key, redeemScript);
+                    } else {
+                        Objects.requireNonNull(redeemScript, "Coin selection includes unspendable outputs");
+                        vsize += script.getNumberOfBytesRequiredToSpend(key, redeemScript);
+                    }
                 } else {
                     vsize += script.getNumberOfBytesRequiredToSpend(key, redeemScript);
                 }

@@ -47,6 +47,8 @@ public class ChildNumber implements Comparable<ChildNumber> {
 
     public static final ChildNumber COINTYPE_BTC = new ChildNumber(0, true);    // MainNet
     public static final ChildNumber COINTYPE_TBTC = new ChildNumber(1, true);   // TestNet
+    public static final ChildNumber COINTYPE_LTC = new ChildNumber(2, true);    // MainNet
+
 
     public static final ChildNumber CHANGE_RECEIVING = new ChildNumber(0, false);
     public static final ChildNumber CHANGE_CHANGE = new ChildNumber(1, false);

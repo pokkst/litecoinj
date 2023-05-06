@@ -61,7 +61,7 @@ public abstract class BitcoinNetworkParams extends NetworkParameters {
     /**
      * Block reward halving interval (number of blocks)
      */
-    public static final int REWARD_HALVING_INTERVAL = 210_000;
+    public static final int REWARD_HALVING_INTERVAL = 840_000;
 
     private static final Logger log = LoggerFactory.getLogger(BitcoinNetworkParams.class);
 
@@ -162,7 +162,7 @@ public abstract class BitcoinNetworkParams extends NetworkParameters {
 
     @Override
     public void checkDifficultyTransitions(final StoredBlock storedPrev, final Block nextBlock,
-        final BlockStore blockStore) throws VerificationException, BlockStoreException {
+                                           final BlockStore blockStore) throws VerificationException, BlockStoreException {
         final Block prev = storedPrev.getHeader();
 
         // Is this supposed to be a difficulty transition point?
@@ -178,21 +178,31 @@ public abstract class BitcoinNetworkParams extends NetworkParameters {
 
         // We need to find a block far back in the chain. It's OK that this is expensive because it only occurs every
         // two weeks after the initial block chain download.
-        Stopwatch watch = Stopwatch.start();
+        final Stopwatch watch = Stopwatch.start();
         Sha256Hash hash = prev.getHash();
-        StoredBlock cursor = null;
-        final int interval = this.getInterval();
-        for (int i = 0; i < interval; i++) {
+        StoredBlock cursor = blockStore.get(hash);;
+        long blocksToGoBack = this.getInterval()-1;
+        if(storedPrev.getHeight()+1 != this.getInterval()) {
+            blocksToGoBack = this.getInterval();
+        }
+        for (int i = 0; i < blocksToGoBack; i++) {
+            hash = cursor.getHeader().getPrevBlockHash();
             cursor = blockStore.get(hash);
             if (cursor == null) {
                 // This should never happen. If it does, it means we are following an incorrect or busted chain.
                 throw new VerificationException(
                         "Difficulty transition point but we did not find a way back to the last transition point. Not found: " + hash);
             }
-            hash = cursor.getHeader().getPrevBlockHash();
         }
-        checkState(cursor != null && isDifficultyTransitionPoint(cursor.getHeight() - 1), () ->
-                "didn't arrive at a transition point");
+        checkState(cursor != null, () -> "No block found for difficulty transition.");
+        boolean isDifficultyTransitionPoint = false;
+        if(blocksToGoBack == this.getInterval()-1) {
+            isDifficultyTransitionPoint = isDifficultyTransitionPoint(cursor.getHeight()-1);
+        } else if(blocksToGoBack == this.getInterval()) {
+            isDifficultyTransitionPoint = isDifficultyTransitionPoint(cursor.getHeight());
+        }
+        checkState(isDifficultyTransitionPoint,
+                () -> "Didn't arrive at a transition point.");
         watch.stop();
         if (watch.elapsed().toMillis() > 50)
             log.info("Difficulty transition traversal took {}", watch);
@@ -207,15 +217,17 @@ public abstract class BitcoinNetworkParams extends NetworkParameters {
             timespan = targetTimespan * 4;
 
         BigInteger newTarget = ByteUtils.decodeCompactBits(prev.getDifficultyTarget());
+        boolean fShift = newTarget.compareTo(maxTarget.subtract(BigInteger.ONE)) > 0;
+        if(fShift)
+            newTarget = newTarget.shiftRight(1);
         newTarget = newTarget.multiply(BigInteger.valueOf(timespan));
         newTarget = newTarget.divide(BigInteger.valueOf(targetTimespan));
+        if(fShift)
+            newTarget = newTarget.shiftLeft(1);
 
-        BigInteger maxTarget = this.getMaxTarget();
-        if (newTarget.compareTo(maxTarget) > 0) {
-            log.info("Difficulty hit proof of work limit: {} vs {}",
-                    Long.toHexString(ByteUtils.encodeCompactBits(newTarget)),
-                    Long.toHexString(ByteUtils.encodeCompactBits(maxTarget)));
-            newTarget = maxTarget;
+        if (newTarget.compareTo(this.getMaxTarget()) > 0) {
+            log.info("Difficulty hit proof of work limit: {}", newTarget.toString(16));
+            newTarget = this.getMaxTarget();
         }
 
         int accuracyBytes = (int) (nextBlock.getDifficultyTarget() >>> 24) - 3;

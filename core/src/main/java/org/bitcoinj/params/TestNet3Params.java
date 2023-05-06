@@ -40,37 +40,36 @@ public class TestNet3Params extends BitcoinNetworkParams {
     public static final int TESTNET_MAJORITY_WINDOW = 100;
     public static final int TESTNET_MAJORITY_REJECT_BLOCK_OUTDATED = 75;
     public static final int TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = 51;
-    private static final long GENESIS_TIME = 1296688602;
-    private static final long GENESIS_NONCE = 414098458;
-    private static final Sha256Hash GENESIS_HASH = Sha256Hash.wrap("000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943");
+    private static final long GENESIS_TIME = 1486949366L;
+    private static final long GENESIS_NONCE = 293345L;
+    private static final Sha256Hash GENESIS_HASH = Sha256Hash.wrap("4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0");
 
     public TestNet3Params() {
         super(BitcoinNetwork.TESTNET);
 
         targetTimespan = TARGET_TIMESPAN;
-        maxTarget = ByteUtils.decodeCompactBits(Block.STANDARD_MAX_DIFFICULTY_TARGET);
+        maxTarget = ByteUtils.decodeCompactBits(0x1e0fffffL);
 
-        port = 18333;
-        packetMagic = 0x0b110907;
+        port = 19335;
+        packetMagic = 0xfdd2c8f1;
         dumpedPrivateKeyHeader = 239;
-        addressHeader = 111;
-        p2shHeader = 196;
-        segwitAddressHrp = "tb";
+        segwitAddressHrp = "tltc";
         spendableCoinbaseDepth = 100;
         bip32HeaderP2PKHpub = 0x043587cf; // The 4 byte header that serializes in base58 to "tpub".
         bip32HeaderP2PKHpriv = 0x04358394; // The 4 byte header that serializes in base58 to "tprv"
         bip32HeaderP2WPKHpub = 0x045f1cf6; // The 4 byte header that serializes in base58 to "vpub".
         bip32HeaderP2WPKHpriv = 0x045f18bc; // The 4 byte header that serializes in base58 to "vprv"
+        bip32HeaderP2SHP2WPKHpub = 0x044a5262; // The 4 byte header that serializes in base58 to "upub".
+        bip32HeaderP2SHP2WPKHpriv = 0x044a4e28; // The 4 byte header that serializes in base58 to "uprv"
 
         majorityEnforceBlockUpgrade = TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
         majorityRejectBlockOutdated = TESTNET_MAJORITY_REJECT_BLOCK_OUTDATED;
         majorityWindow = TESTNET_MAJORITY_WINDOW;
 
         dnsSeeds = new String[] {
-                "testnet-seed.bitcoin.jonasschnelli.ch", // Jonas Schnelli
-                "seed.tbtc.petertodd.org",               // Peter Todd
-                "seed.testnet.bitcoin.sprovoost.nl",     // Sjors Provoost
-                "testnet-seed.bluematt.me",              // Matt Corallo
+                "testnet-seed.litecointools.com",
+                "seed-b.litecoin.loshan.co.uk",
+                "dnsseed-testnet.thrasher.io"
         };
         addrSeeds = null;
 
@@ -89,7 +88,7 @@ public class TestNet3Params extends BitcoinNetworkParams {
         synchronized (GENESIS_HASH) {
             if (genesisBlock == null) {
                 genesisBlock = Block.createGenesis();
-                genesisBlock.setDifficultyTarget(Block.STANDARD_MAX_DIFFICULTY_TARGET);
+                genesisBlock.setDifficultyTarget(0x1e0ffff0L);
                 genesisBlock.setTime(Instant.ofEpochSecond(GENESIS_TIME));
                 genesisBlock.setNonce(GENESIS_NONCE);
                 checkState(genesisBlock.getHash().equals(GENESIS_HASH), () ->

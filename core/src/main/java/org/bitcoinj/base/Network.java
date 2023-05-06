@@ -40,6 +40,8 @@ public interface Network {
      */
     int legacyP2SHHeader();
 
+    int legacyP2SHHeader2();
+
     /**
      * Human-readable part (HRP) of bech32 encoded segwit addresses for this network.
      * @return HRP (lowercase)

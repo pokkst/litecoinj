@@ -31,18 +31,24 @@ public class DefaultKeyChainFactory implements KeyChainFactory {
     @Override
     public DeterministicKeyChain makeKeyChain(DeterministicSeed seed, KeyCrypter crypter,
                                               ScriptType outputScriptType, List<ChildNumber> accountPath) {
+        if(outputScriptType == ScriptType.P2SH_P2WPKH)
+            return new NestedSegwitKeyChain(seed, crypter, outputScriptType, accountPath);
         return new DeterministicKeyChain(seed, crypter, outputScriptType, accountPath);
     }
 
     @Override
     public DeterministicKeyChain makeWatchingKeyChain(DeterministicKey accountKey,
                                                       ScriptType outputScriptType) throws UnreadableWalletException {
+        if(outputScriptType == ScriptType.P2SH_P2WPKH)
+            return NestedSegwitKeyChain.builder().watch(accountKey).outputScriptType(outputScriptType).build();
         return DeterministicKeyChain.builder().watch(accountKey).outputScriptType(outputScriptType).build();
     }
 
     @Override
     public DeterministicKeyChain makeSpendingKeyChain(DeterministicKey accountKey,
                                                       ScriptType outputScriptType) throws UnreadableWalletException {
+        if (outputScriptType == ScriptType.P2SH_P2WPKH)
+            return NestedSegwitKeyChain.builder().spend(accountKey).outputScriptType(outputScriptType).build();
         return DeterministicKeyChain.builder().spend(accountKey).outputScriptType(outputScriptType).build();
     }
 }

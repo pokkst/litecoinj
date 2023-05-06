@@ -195,7 +195,7 @@ public class LegacyAddress implements Address {
         byte[] bytes = Arrays.copyOfRange(versionAndDataBytes, 1, versionAndDataBytes.length);
         if (version == network.legacyAddressHeader())
             return new LegacyAddress(network, false, bytes);
-        else if (version == network.legacyP2SHHeader())
+        else if (version == network.legacyP2SHHeader() || version == network.legacyP2SHHeader2())
             return new LegacyAddress(network, true, bytes);
         throw new AddressFormatException.WrongNetwork(version);
     }
@@ -216,7 +216,7 @@ public class LegacyAddress implements Address {
      * @return version header as one byte
      */
     public int getVersion() {
-        return p2sh ? network.legacyP2SHHeader() : network.legacyAddressHeader();
+        return p2sh ? network.legacyP2SHHeader2() : network.legacyAddressHeader();
     }
 
     /**
@@ -331,7 +331,9 @@ public class LegacyAddress implements Address {
      */
     public enum P2SHHeader {
         X5(5, MAINNET),
-        X196(196, TESTNET, SIGNET, REGTEST);
+        X196(196, TESTNET, SIGNET, REGTEST),
+        X50(50, MAINNET),
+        X58(58, TESTNET, SIGNET, REGTEST);
 
         private final int headerByte;
         private final EnumSet<BitcoinNetwork> networks;

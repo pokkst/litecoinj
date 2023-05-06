@@ -147,6 +147,16 @@ public class KeyChainGroup implements KeyBag {
                 this.chains.clear();
                 this.chains.add(fallbackChain);
                 this.chains.add(defaultChain);
+            } else if (outputScriptType == ScriptType.P2SH_P2WPKH) {
+                DeterministicKeyChain fallbackChain = DeterministicKeyChain.builder().seed(seed)
+                        .outputScriptType(ScriptType.P2WPKH)
+                        .accountPath(structure.accountPathFor(ScriptType.P2SH_P2WPKH)).build();
+                NestedSegwitKeyChain defaultChain = NestedSegwitKeyChain.nestedSegwitBuilder().seed(seed)
+                        .outputScriptType(ScriptType.P2SH_P2WPKH)
+                        .accountPath(structure.accountPathFor(ScriptType.P2SH_P2WPKH)).build();
+                this.chains.clear();
+                this.chains.add(fallbackChain);
+                this.chains.add(defaultChain);
             } else {
                 throw new IllegalArgumentException(outputScriptType.toString());
             }
@@ -177,6 +187,16 @@ public class KeyChainGroup implements KeyBag {
                 DeterministicKeyChain defaultChain = DeterministicKeyChain.builder().spend(accountKey)
                         .outputScriptType(ScriptType.P2WPKH)
                         .accountPath(structure.accountPathFor(ScriptType.P2WPKH, network)).build();
+                this.chains.clear();
+                this.chains.add(fallbackChain);
+                this.chains.add(defaultChain);
+            } else if(outputScriptType == ScriptType.P2SH_P2WPKH) {
+                DeterministicKeyChain fallbackChain = DeterministicKeyChain.builder().spend(accountKey)
+                        .outputScriptType(ScriptType.P2WPKH)
+                        .accountPath(structure.accountPathFor(ScriptType.P2SH_P2WPKH)).build();
+                DeterministicKeyChain defaultChain = DeterministicKeyChain.builder().spend(accountKey)
+                        .outputScriptType(ScriptType.P2SH_P2WPKH)
+                        .accountPath(structure.accountPathFor(ScriptType.P2SH_P2WPKH)).build();
                 this.chains.clear();
                 this.chains.add(fallbackChain);
                 this.chains.add(defaultChain);
@@ -300,8 +320,21 @@ public class KeyChainGroup implements KeyBag {
                 ? new EnumMap<KeyChain.KeyPurpose, DeterministicKey>(KeyChain.KeyPurpose.class)
                 : currentKeys;
         this.currentAddresses = new EnumMap<>(KeyChain.KeyPurpose.class);
+
+        if(isNestedSegwit()) {
+            maybeLookaheadScripts();
+            for (Map.Entry<KeyChain.KeyPurpose, DeterministicKey> entry : this.currentKeys.entrySet()) {
+                Address address = ScriptBuilder
+                        .createP2SHOutputScript(getActiveKeyChain().getRedeemData(entry.getValue()).redeemScript)
+                        .getToAddress(network);
+                currentAddresses.put(entry.getKey(), address);
+            }
+        }
     }
 
+    public final boolean isNestedSegwit() {
+        return chains != null && !chains.isEmpty() && getActiveKeyChain().isNestedSegwit();
+    }
     /**
      * Are any deterministic keychains supported?
      * @return true if it contains any deterministic keychain
@@ -369,6 +402,15 @@ public class KeyChainGroup implements KeyBag {
     public Address currentAddress(KeyChain.KeyPurpose purpose) {
         DeterministicKeyChain chain = getActiveKeyChain();
         ScriptType outputScriptType = chain.getOutputScriptType();
+
+        if(chain.isNestedSegwit()) {
+            Address current = currentAddresses.get(purpose);
+            if (current == null) {
+                current = freshAddress(purpose);
+                currentAddresses.put(purpose, current);
+            }
+            return current;
+        }
         if (outputScriptType == ScriptType.P2PKH || outputScriptType == ScriptType.P2WPKH) {
             return currentKey(purpose).toAddress(outputScriptType, network);
         } else {
@@ -430,6 +472,15 @@ public class KeyChainGroup implements KeyBag {
     public Address freshAddress(KeyChain.KeyPurpose purpose) {
         DeterministicKeyChain chain = getActiveKeyChain();
         ScriptType outputScriptType = chain.getOutputScriptType();
+        if(chain.isNestedSegwit()) {
+            Script outputScript = chain.freshOutputScript(purpose);
+            checkState(ScriptPattern.isP2SH(outputScript)); // Only handle P2SH for now
+            Address freshAddress = LegacyAddress.fromScriptHash(network,
+                    ScriptPattern.extractHashFromP2SH(outputScript));
+            maybeLookaheadScripts();
+            currentAddresses.put(purpose, freshAddress);
+            return freshAddress;
+        }
         if (outputScriptType == ScriptType.P2PKH || outputScriptType == ScriptType.P2WPKH) {
             return freshKey(purpose).toAddress(outputScriptType, network);
         } else {

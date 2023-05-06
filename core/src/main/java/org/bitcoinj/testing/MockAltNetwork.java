@@ -40,6 +40,11 @@ public class MockAltNetwork implements Network {
     }
 
     @Override
+    public int legacyP2SHHeader2() {
+        return 50;
+    }
+
+    @Override
     public String segwitAddressHrp() {
         return "mock";
     }

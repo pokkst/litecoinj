@@ -173,6 +173,16 @@ public class TransactionOutPoint {
         } else if (ScriptPattern.isP2WPKH(connectedScript)) {
             byte[] addressBytes = ScriptPattern.extractHashFromP2WH(connectedScript);
             return keyBag.findKeyFromPubKeyHash(addressBytes, ScriptType.P2WPKH);
+        } else if (ScriptPattern.isP2SH(connectedScript)) {
+            byte[] addressBytes = ScriptPattern.extractHashFromP2SH(connectedScript);
+            RedeemData redeemData = keyBag.findRedeemDataFromScriptHash(addressBytes);
+            if(redeemData != null) {
+                Script redeemScript = redeemData.redeemScript;
+                byte[] witnessHash = ScriptPattern.extractHashFromP2WH(redeemScript);
+                return keyBag.findKeyFromPubKeyHash(witnessHash, ScriptType.P2SH_P2WPKH);
+            } else {
+                throw new ScriptException(ScriptError.SCRIPT_ERR_UNKNOWN_ERROR, "Could not understand form of connected output script: " + connectedScript);
+            }
         } else if (ScriptPattern.isP2PK(connectedScript)) {
             byte[] pubkeyBytes = ScriptPattern.extractKeyFromP2PK(connectedScript);
             return keyBag.findKeyFromPubKey(pubkeyBytes);

@@ -17,6 +17,7 @@
 package org.bitcoinj.base.internal;
 
 import com.google.common.io.BaseEncoding;
+import com.lambdaworks.crypto.SCrypt;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -741,5 +742,13 @@ public class ByteUtils {
 
     private static int compareUnsigned(byte a, byte b) {
         return Byte.toUnsignedInt(a) - Byte.toUnsignedInt(b);
+    }
+
+    public static byte[] scryptDigest(byte[] input) {
+        try {
+            return SCrypt.scrypt(input, input, 1024, 1, 1, 32);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

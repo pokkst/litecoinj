@@ -141,7 +141,7 @@ public class DefaultAddressParser implements AddressParser {
             throws AddressFormatException, AddressFormatException.WrongNetwork {
         int version = Base58.decodeChecked(base58)[0] & 0xFF;
         return base58Networks.stream()
-                .filter(n -> version == n.legacyAddressHeader() || version == n.legacyP2SHHeader())
+                .filter(n -> version == n.legacyAddressHeader() || version == n.legacyP2SHHeader() || version == n.legacyP2SHHeader2())
                 .findFirst()
                 .map(n -> LegacyAddress.fromBase58(base58, n))
                 .orElseThrow(() -> new AddressFormatException.InvalidPrefix("No network found for " + base58));
