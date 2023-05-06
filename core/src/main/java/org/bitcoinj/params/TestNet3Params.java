@@ -53,7 +53,6 @@ public class TestNet3Params extends BitcoinNetworkParams {
         port = 19335;
         packetMagic = 0xfdd2c8f1;
         dumpedPrivateKeyHeader = 239;
-        segwitAddressHrp = "tltc";
         spendableCoinbaseDepth = 100;
         bip32HeaderP2PKHpub = 0x043587cf; // The 4 byte header that serializes in base58 to "tpub".
         bip32HeaderP2PKHpriv = 0x04358394; // The 4 byte header that serializes in base58 to "tprv"

@@ -836,7 +836,7 @@ public class ECKey implements EncryptableItem {
      * @throws KeyCrypterException if this ECKey is encrypted and no AESKey is provided or it does not decrypt the ECKey.
      */
     public String signMessage(String message, @Nullable AesKey aesKey, ScriptType scriptType) throws KeyCrypterException {
-        if (!isCompressed() && (scriptType == ScriptType.P2WPKH || scriptType == ScriptType.P2SH)) {
+        if (!isCompressed() && (scriptType == ScriptType.P2WPKH || scriptType == ScriptType.P2SH || scriptType == ScriptType.P2SH_P2WPKH)) {
             throw new IllegalArgumentException("Segwit P2WPKH and P2SH-P2WPKH script types only can be used with compressed keys. See BIP 141.");
         }
         byte[] data = formatMessageForSigning(message);

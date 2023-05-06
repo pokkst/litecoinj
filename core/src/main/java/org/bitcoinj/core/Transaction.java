@@ -930,6 +930,14 @@ public class Transaction extends BaseMessage {
                     sigHash, anyoneCanPay);
             input.setScriptSig(ScriptBuilder.createEmpty());
             input.setWitness(TransactionWitness.redeemP2WPKH(signature, sigKey));
+        } else if (ScriptPattern.isP2SH(scriptPubKey)) {
+            // We assume if it's a P2SH output, then it is a wrapped P2WPKH script.
+            Script redeemScript = ScriptBuilder.createP2WPKHOutputScript(sigKey);
+            Script witnessScript = ScriptBuilder.createP2PKHOutputScript(sigKey);
+            TransactionSignature signature = calculateWitnessSignature(inputIndex, sigKey, witnessScript, input.getValue(),
+                    sigHash, anyoneCanPay);
+            input.setScriptSig(new ScriptBuilder().data(redeemScript.getProgram()).build());
+            input.setWitness(TransactionWitness.redeemP2WPKH(signature, sigKey));
         } else {
             throw new ScriptException(ScriptError.SCRIPT_ERR_UNKNOWN_ERROR, "Don't know how to sign for this kind of scriptPubKey: " + scriptPubKey);
         }

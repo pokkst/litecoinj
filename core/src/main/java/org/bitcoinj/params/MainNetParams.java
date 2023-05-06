@@ -46,7 +46,6 @@ public class MainNetParams extends BitcoinNetworkParams {
         port = 9333;
         packetMagic = 0xfbc0b6db;
         dumpedPrivateKeyHeader = 128;
-        segwitAddressHrp = "ltc";
         spendableCoinbaseDepth = 100;
         bip32HeaderP2PKHpub = 0x0488b21e; // The 4 byte header that serializes in base58 to "xpub".
         bip32HeaderP2PKHpriv = 0x0488ade4; // The 4 byte header that serializes in base58 to "xprv"

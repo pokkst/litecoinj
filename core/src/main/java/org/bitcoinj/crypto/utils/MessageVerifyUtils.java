@@ -49,6 +49,7 @@ public class MessageVerifyUtils {
                     comparePubKeyHash(address, message, signatureBase64);
                     break;
                 case P2SH:
+                case P2SH_P2WPKH:
                     compareP2SHScriptHashDerivedFromPubKey((LegacyAddress) address, message, signatureBase64);
                     break;
                 default:

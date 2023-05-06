@@ -50,7 +50,7 @@ public enum BitcoinNetwork implements Network {
     /**
      * Scheme part for Bitcoin URIs.
      */
-    public static final String BITCOIN_SCHEME = "bitcoin";
+    public static final String BITCOIN_SCHEME = "litecoin";
 
     /**
      * The maximum number of coins to be generated

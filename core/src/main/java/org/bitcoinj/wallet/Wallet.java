@@ -1355,7 +1355,7 @@ public class Wallet extends BaseTaggableObject
         final ScriptType scriptType = address.getOutputScriptType();
         if (scriptType == ScriptType.P2PKH || scriptType == ScriptType.P2WPKH)
             return isPubKeyHashMine(address.getHash(), scriptType);
-        else if (scriptType == ScriptType.P2SH)
+        else if (scriptType == ScriptType.P2SH || scriptType == ScriptType.P2SH_P2WPKH)
             return isPayToScriptHashMine(address.getHash());
         else if (scriptType == ScriptType.P2WSH || scriptType == ScriptType.P2TR)
             return false;

@@ -71,7 +71,6 @@ public abstract class NetworkParameters {
     protected int port;
     protected int packetMagic;  // Indicates message origin network and is used to seek to the next message when stream state is unknown.
     protected int dumpedPrivateKeyHeader;
-    protected String segwitAddressHrp;
     protected int interval;
     protected int targetTimespan;
     protected int bip32HeaderP2PKHpub;
@@ -310,16 +309,6 @@ public abstract class NetworkParameters {
      */
     public int getDumpedPrivateKeyHeader() {
         return dumpedPrivateKeyHeader;
-    }
-
-    /**
-     * Human-readable part of bech32 encoded segwit address.
-     * @return the human-readable part value
-     * @deprecated Use {@link Network#segwitAddressHrp()} or {@link org.bitcoinj.base.SegwitAddress.SegwitHrp}
-     */
-    @Deprecated
-    public String getSegwitAddressHrp() {
-        return segwitAddressHrp;
     }
 
     /**

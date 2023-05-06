@@ -44,7 +44,6 @@ public class UnitTestParams extends BitcoinNetworkParams {
         port = 18333;
         packetMagic = 0x0b110907;
         dumpedPrivateKeyHeader = 239;
-        segwitAddressHrp = "tb";
         spendableCoinbaseDepth = 5;
         bip32HeaderP2PKHpub = 0x043587cf; // The 4 byte header that serializes in base58 to "tpub".
         bip32HeaderP2PKHpriv = 0x04358394; // The 4 byte header that serializes in base58 to "tprv"
