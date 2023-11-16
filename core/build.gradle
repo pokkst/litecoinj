@@ -25,6 +25,14 @@ dependencies {
     testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
 }
 
+processResources {
+    dependsOn 'generateProto'
+}
+
+processTestResources {
+    dependsOn 'generateTestProto'
+}
+
 sourceCompatibility = 8
 targetCompatibility = 8
 compileJava.options.encoding = 'UTF-8'
@@ -55,7 +63,7 @@ protobuf {
 }
 
 tasks.withType(Test) {
-    exclude 'org/bitcoinj/net/discovery/DnsDiscoveryTest*'
+    exclude 'org/litecoinj/net/discovery/DnsDiscoveryTest*'
     testLogging {
         events "failed"
         exceptionFormat "full"
@@ -89,7 +97,7 @@ if (GradleVersion.current().compareTo(gradleVersionToolchains) > 0) {
     }
 }
 
-ext.moduleName = 'org.bitcoinj.core'
+ext.moduleName = 'org.litecoinj.core'
 
 jar {
     inputs.property("moduleName", moduleName)
@@ -126,7 +134,7 @@ artifacts {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'bitcoinj-core'
+            artifactId = 'litecoinj-core'
             from components.java
             artifact sourcesJar
             artifact javadocJar

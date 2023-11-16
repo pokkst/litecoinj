@@ -17,7 +17,7 @@ def toolchainsMinVersion = GradleVersion.version("6.8")     // Toolchains with s
 boolean hasToolchains = (GradleVersion.current().compareTo(toolchainsMinVersion) >= 0)
 
 dependencies {
-    implementation project(':bitcoinj-core')
+    implementation project(':litecoinj-core')
     implementation 'info.picocli:picocli:4.7.1'
     implementation 'org.slf4j:slf4j-jdk14:2.0.7'
     if (hasAnnotationProcessor) {
@@ -42,7 +42,7 @@ compileJava {
     options.compilerArgs << '-Xlint:deprecation'
 }
 
-mainClassName = "org.bitcoinj.wallettool.WalletTool"
+mainClassName = "org.litecoinj.wallettool.WalletTool"
 applicationName = "wallet-tool"
 
 // wallettool is using JUnit 5 for testing, if it's not available no tests will be run

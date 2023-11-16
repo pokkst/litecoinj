@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    implementation project(':bitcoinj-core')
+    implementation project(':litecoinj-core')
     implementation 'info.picocli:picocli:4.7.1'
     implementation 'org.slf4j:slf4j-jdk14:2.0.7'
 }
@@ -21,7 +21,7 @@ compileJava {
 
 task build_checkpoints(type: JavaExec) {
     description = 'Create checkpoint files to use with CheckpointManager.'
-    main = 'org.bitcoinj.tools.BuildCheckpoints'
+    main = 'org.litecoinj.tools.BuildCheckpoints'
     if (project.hasProperty('appArgs') && appArgs.length() > 0)
         args = Arrays.asList(appArgs.split("\\s+"))
     classpath = sourceSets.main.runtimeClasspath

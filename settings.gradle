@@ -8,32 +8,32 @@ def minJunit5GradleVersion = GradleVersion.version("4.6")
 // Minimum Gradle version for builds of JavaFX 11 module
 def minFxGradleVersion = GradleVersion.version("4.10")
 
-rootProject.name = 'bitcoinj-parent'
+rootProject.name = 'litecoinj-parent'
 
 if (GradleVersion.current().compareTo(minGradleVersion) < 0) {
-    throw new GradleScriptException("bitcoinj build requires Gradle ${minGradleVersion} or later", null)
+    throw new GradleScriptException("litecoinj build requires Gradle ${minGradleVersion} or later", null)
 }
 
 if (!JavaVersion.current().isJava11Compatible()) {
-    throw new GradleScriptException("bitcoinj build requires Java 11 or later", null)
+    throw new GradleScriptException("litecoinj build requires Java 11 or later", null)
 }
 
 include 'core'
-project(':core').name = 'bitcoinj-core'
+project(':core').name = 'litecoinj-core'
 
 include 'tools'
-project(':tools').name = 'bitcoinj-tools'
+project(':tools').name = 'litecoinj-tools'
 
 include 'wallettool'
-project(':wallettool').name = 'bitcoinj-wallettool'
+project(':wallettool').name = 'litecoinj-wallettool'
 
 include 'examples'
-project(':examples').name = 'bitcoinj-examples'
+project(':examples').name = 'litecoinj-examples'
 
 if (GradleVersion.current().compareTo(minFxGradleVersion) > 0) {
     System.err.println "Including wallettemplate because ${GradleVersion.current()}"
     include 'wallettemplate'
-    project(':wallettemplate').name = 'bitcoinj-wallettemplate'
+    project(':wallettemplate').name = 'litecoinj-wallettemplate'
 } else {
     System.err.println "Skipping wallettemplate, requires Gradle ${minFxGradleVersion}+, currently running: ${GradleVersion.current()}"
 }
@@ -41,7 +41,7 @@ if (GradleVersion.current().compareTo(minFxGradleVersion) > 0) {
 if (GradleVersion.current().compareTo(minJunit5GradleVersion) >= 0) {
     System.err.println "Including integration-test because ${GradleVersion.current()}"
     include 'integration-test'
-    project(':integration-test').name = 'bitcoinj-integration-test'
+    project(':integration-test').name = 'litecoinj-integration-test'
 } else {
     System.err.println "Skipping integration-test, requires Gradle ${minJunit5GradleVersion}+, currently running: ${GradleVersion.current()}"
 }

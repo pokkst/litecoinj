@@ -144,7 +144,7 @@
   "methods":[{"name":"<init>","parameterTypes":["sun.security.x509.X500Name"] }]
 },
 {
-  "name":"org.bitcoinj.wallet.Protos$DeterministicKey",
+  "name":"org.litecoinj.wallet.Protos$DeterministicKey",
   "fields":[
     {"name":"bitField0_"}, 
     {"name":"chainCode_"}, 
@@ -156,7 +156,7 @@
   ]
 },
 {
-  "name":"org.bitcoinj.wallet.Protos$Extension",
+  "name":"org.litecoinj.wallet.Protos$Extension",
   "fields":[
     {"name":"bitField0_"}, 
     {"name":"data_"}, 
@@ -165,7 +165,7 @@
   ]
 },
 {
-  "name":"org.bitcoinj.wallet.Protos$Key",
+  "name":"org.litecoinj.wallet.Protos$Key",
   "fields":[
     {"name":"accountPath_"}, 
     {"name":"bitField0_"}, 
@@ -182,7 +182,7 @@
   ]
 },
 {
-  "name":"org.bitcoinj.wallet.Protos$Script",
+  "name":"org.litecoinj.wallet.Protos$Script",
   "fields":[
     {"name":"bitField0_"}, 
     {"name":"creationTimestamp_"}, 
@@ -190,7 +190,7 @@
   ]
 },
 {
-  "name":"org.bitcoinj.wallet.Protos$Tag",
+  "name":"org.litecoinj.wallet.Protos$Tag",
   "fields":[
     {"name":"bitField0_"}, 
     {"name":"data_"}, 
@@ -198,7 +198,7 @@
   ]
 },
 {
-  "name":"org.bitcoinj.wallet.Protos$Transaction",
+  "name":"org.litecoinj.wallet.Protos$Transaction",
   "fields":[
     {"name":"bitField0_"}, 
     {"name":"blockHash_"}, 
@@ -217,7 +217,7 @@
   ]
 },
 {
-  "name":"org.bitcoinj.wallet.Protos$Wallet",
+  "name":"org.litecoinj.wallet.Protos$Wallet",
   "fields":[
     {"name":"bitField0_"}, 
     {"name":"description_"}, 
@@ -237,7 +237,7 @@
   ]
 },
 {
-  "name":"org.bitcoinj.wallettool.WalletTool",
+  "name":"org.litecoinj.wallettool.WalletTool",
   "allDeclaredFields":true,
   "queryAllDeclaredMethods":true
 },

@@ -18,27 +18,27 @@ package wallettemplate;
 
 import javafx.application.Platform;
 import javafx.scene.layout.HBox;
-import org.bitcoinj.base.Address;
-import org.bitcoinj.base.Coin;
-import org.bitcoinj.crypto.AesKey;
-import org.bitcoinj.core.*;
-import org.bitcoinj.crypto.ECKey;
-import org.bitcoinj.wallet.SendRequest;
-import org.bitcoinj.wallet.Wallet;
+import org.litecoinj.base.Address;
+import org.litecoinj.base.Coin;
+import org.litecoinj.crypto.AesKey;
+import org.litecoinj.core.*;
+import org.litecoinj.crypto.ECKey;
+import org.litecoinj.wallet.SendRequest;
+import org.litecoinj.wallet.Wallet;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import org.bitcoinj.walletfx.application.WalletApplication;
-import org.bitcoinj.walletfx.overlay.OverlayController;
-import org.bitcoinj.walletfx.overlay.OverlayableStackPaneController;
-import org.bitcoinj.walletfx.controls.BitcoinAddressValidator;
-import org.bitcoinj.walletfx.utils.TextFieldValidator;
-import org.bitcoinj.walletfx.utils.WTUtils;
+import org.litecoinj.walletfx.application.WalletApplication;
+import org.litecoinj.walletfx.overlay.OverlayController;
+import org.litecoinj.walletfx.overlay.OverlayableStackPaneController;
+import org.litecoinj.walletfx.controls.BitcoinAddressValidator;
+import org.litecoinj.walletfx.utils.TextFieldValidator;
+import org.litecoinj.walletfx.utils.WTUtils;
 
-import static org.bitcoinj.base.internal.Preconditions.checkState;
-import static org.bitcoinj.walletfx.utils.GuiUtils.*;
+import static org.litecoinj.base.internal.Preconditions.checkState;
+import static org.litecoinj.walletfx.utils.GuiUtils.*;
 
 public class SendMoneyController implements OverlayController<SendMoneyController> {
     public Button sendBtn;

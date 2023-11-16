@@ -5,8 +5,8 @@ plugins {
 }
 
 dependencies {
-    implementation project(':bitcoinj-core')
-    implementation project(':bitcoinj-examples')
+    implementation project(':litecoinj-core')
+    implementation project(':litecoinj-examples')
 
     testImplementation 'org.slf4j:slf4j-jdk14:2.0.7'
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.9.0"

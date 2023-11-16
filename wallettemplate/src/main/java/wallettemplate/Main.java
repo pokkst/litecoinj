@@ -18,9 +18,9 @@ package wallettemplate;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import org.bitcoinj.base.BitcoinNetwork;
-import org.bitcoinj.base.ScriptType;
-import org.bitcoinj.walletfx.application.AppDelegate;
+import org.litecoinj.base.BitcoinNetwork;
+import org.litecoinj.base.ScriptType;
+import org.litecoinj.walletfx.application.AppDelegate;
 
 /**
  * Proxy JavaFX {@link Application} that delegates all functionality
